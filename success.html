@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOKOHAMA TWS - Submission Success</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Lexend', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f2f2f2 0%, #e6e6e6 100%);
+            padding: 15px;
+            color: #333;
+            line-height: 2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header {
+            background: #ec2431;
+            color: white;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin: -30px -30px 30px -30px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            z-index: 2;
+        }
+        
+        .title h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            letter-spacing: -0.2px;
+        }
+        
+        .title p {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: normal;
+        }
+        
+        .success-message {
+            margin-bottom: 30px;
+        }
+        
+        .success-message h2 {
+            color: #ec2431;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .success-message p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .btn {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            font-family: 'Lexend', sans-serif;
+            letter-spacing: -0.5px;
+            background: #ec2431;
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .tractor-icon {
+            position: absolute;
+            right: 30px;
+            top: 30px;
+            font-size: 50px;
+            color: rgba(255,255,255,0.3);
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="title">
+                    <h1>YOKOHAMA TWS</h1>
+                    <p>Submission Success</p>
+                </div>
+            </div>
+            <div class="form-number">
+                <p>Form: AG-ADJUST-2025</p>
+            </div>
+            <i class="fas fa-tractor tractor-icon"></i>
+        </header>
+        <div class="success-message">
+            <h2>Thank You!</h2>
+            <p>Your warranty submission has been successfully received. You will receive a confirmation email shortly with the details of your submission.</p>
+        </div>
+        <a href="/ClaimForm-Main.html" class="btn">
+            <i class="fas fa-arrow-left"></i> Back to Main Form
+        </a>
+    </div>
+</body>
+</html>
