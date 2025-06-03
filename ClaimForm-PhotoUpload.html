@@ -776,548 +776,589 @@
         </form>
     </div>
 
-    <script>
-        const translations = {
-            en: {
-                headerTitle: "YOKOHAMA TWS",
-                headerSubtitlePhoto: "Photo Upload",
-                formNumber: "Form: AG-ADJUST-2025",
-                languageLabel: "Select Language:",
-                formNoticePhoto: "Upload the required photos for your adjustment claim. Ensure all images meet the specified requirements.",
-                photoUploadTitle: "Photo Upload",
-                fullProfileView: "Full Profile View",
-                uploadFullProfile: "Upload a clear photo showing the full profile of the tire.",
-                requirements: "Requirements:",
-                entireTireVisible: "Entire tire must be visible",
-                sizeBrandReadable: "Tire size and brand must be clearly readable",
-                goodLighting: "Photo should be taken in good lighting",
-                treadView: "Tread View",
-                uploadTreadView: "Upload a clear photo showing the tire tread pattern.",
-                fullTreadPattern: "Full view of tread pattern across the tire",
-                depthMeasurementsVisible: "Depth measurements visible if possible",
-                noObstructions: "Ensure no obstructions in the photo",
-                defectOverview: "Defect Overview",
-                uploadDefectOverview: "Upload a well-lit photo showing the entire defect area.",
-                entireTireWithDefect: "Capture entire tire with defect visible",
-                highlightDefect: "Highlight defect area with chalk if needed",
-                goodLightingFocus: "Ensure good lighting and focus",
-                defectCloseup: "Defect Close-up",
-                uploadDefectCloseup: "Upload a detailed close-up photo of the defect.",
-                clearFocusedDefect: "Clear, focused image of the defect",
-                depthDimensions: "Show depth and dimensions of the defect",
-                referenceObject: "Include a reference object for scale if possible",
-                insideView: "Inside View",
-                uploadInsideView: "Upload a clear photo of the inside of the tire.",
-                entireInnerSurface: "Show the entire inner surface",
-                noDebris: "Ensure no debris obstructing the view",
-                goodInnerLighting: "Good lighting to reveal any imperfections",
-                manufacturingCode: "Manufacturing Code",
-                uploadManufacturingCode: "Upload a clear photo of the manufacturing code.",
-                codeReadable: "Code must be clearly readable",
-                codeFormat: "Should start with: XC, UD, 01H, WN, 4R or 54",
-                ovalNumbers: "Followed by an oval circle and 4 numbers",
-                removedCode: "Removed Code",
-                uploadRemovedCode: "Upload a photo showing the manufacturing code has been removed.",
-                areaRemoved: "Show the area where code was removed",
-                codeFullyRemoved: "Code must be completely removed",
-                noTraces: "No traces of the original code visible",
-                additionalPhotos: "Additional Photos",
-                uploadAdditionalPhotos: "Upload any additional photos that may support your claim.",
-                maxFivePhotos: "Maximum 5 additional photos",
-                relevantImages: "Only relevant images",
-                clearLighting: "Clear and well-lit",
-                clickUploadPhoto: "Click to upload photo",
-                clickUploadPhotos: "Click to upload photos",
-                fileTypes: "JPG, PNG or GIF (Max 5MB)",
-                multipleFiles: "You can select multiple files (Max 5MB each)",
-                additionalInfoSection: "Additional Information",
-                comments: "Comments",
-                commentsPlaceholder: "Provide any additional details about the claim",
-                agreementSection: "Agreement",
-                agreementText: "<strong>Agreement:</strong> I certify that the product(s) in this adjustment has not been involved in an accident or property damage, and that the information provided is true and accurate to the best of my knowledge. It is further understood that the product(s) in this adjustment should be available for further inspection if requested by Yokohama-TWS.",
-                signature: "Signature",
-                date: "Date",
-                footerNote: "<strong>Important:</strong> Please attach Proof of Purchase (purchase invoice) to adjustment form. <br>Yokohama-TWS will not accept an adjustment if the necessary details, including images, are not sent within 30 days of the initial adjustment date.",
-                submitOptionsTitle: "How to Submit This Form",
-                submitOption1: "<strong>Option 1:</strong> Fill out the form online, then click \"Submit Claim\"",
-                submitOption2: "<strong>Option 2:</strong> Click \"Download PDF\" to save a copy, fill it out, and email to agwarranties@yokohama-tws.com",
-                submitOption3: "<strong>Option 3:</strong> Print the completed form and mail to: Yokohama TWS, Att: Teresa Otto, 1200 Rove Ave, Charles City, IA 50616",
-                instructionsTitle: "Instructions for Completing the Form",
-                instruction1: "Complete all required fields marked with an asterisk (*)",
-                instruction2: "Provide detailed information about each product being claimed",
-                instruction3: "Include equipment details and usage information",
-                instruction4: "Sign and date the agreement section",
-                instruction5: "Attach proof of purchase and any supporting documents",
-                instruction6: "Submit within 30 days of the initial adjustment date",
-                instruction7: "Include the recommended minimum of 7 photos per product, following the photo example guide",
-                product: "Product",
-                resetForm: "Reset Form",
-                submitPhotos: "Submit Photos"
-            },
-            es: {
-                headerTitle: "YOKOHAMA TWS",
-                headerSubtitlePhoto: "Carga de Fotos",
-                formNumber: "Formulario: AG-ADJUST-2025",
-                languageLabel: "Seleccionar Idioma:",
-                formNoticePhoto: "Suba las fotos requeridas para su reclamación de ajuste. Asegúrese de que todas las imágenes cumplan con los requisitos especificados.",
-                photoUploadTitle: "Carga de Fotos",
-                fullProfileView: "Vista de Perfil Completo",
-                uploadFullProfile: "Suba una foto clara que muestre el perfil completo del neumático.",
-                requirements: "Requisitos:",
-                entireTireVisible: "El neumático completo debe ser visible",
-                sizeBrandReadable: "El tamaño y la marca del neumático deben ser claramente legibles",
-                goodLighting: "La foto debe tomarse con buena iluminación",
-                treadView: "Vista de la Banda de Rodadura",
-                uploadTreadView: "Suba una foto clara que muestre el patrón de la banda de rodadura del neumático.",
-                fullTreadPattern: "Vista completa del patrón de la banda de rodadura del neumático",
-                depthMeasurementsVisible: "Mediciones de profundidad visibles si es posible",
-                noObstructions: "Asegúrese de que no haya obstrucciones en la foto",
-                defectOverview: "Vista General del Defecto",
-                uploadDefectOverview: "Suba una foto bien iluminada que muestre toda el área del defecto.",
-                entireTireWithDefect: "Capturar todo el neumático con el defecto visible",
-                highlightDefect: "Resaltar el área del defecto con tiza si es necesario",
-                goodLightingFocus: "Asegúrese de buena iluminación y enfoque",
-                defectCloseup: "Primer Plano del Defecto",
-                uploadDefectCloseup: "Suba una foto detallada de cerca del defecto.",
-                clearFocusedDefect: "Imagen clara y enfocada del defecto",
-                depthDimensions: "Mostrar la profundidad y dimensiones del defecto",
-                referenceObject: "Incluir un objeto de referencia para la escala si es posible",
-                insideView: "Vista Interior",
-                uploadInsideView: "Suba una foto clara del interior del neumático.",
-                entireInnerSurface: "Mostrar toda la superficie interior",
-                noDebris: "Asegúrese de que no haya escombros obstruyendo la vista",
-                goodInnerLighting: "Buena iluminación para revelar imperfecciones",
-                manufacturingCode: "Código de Fabricación",
-                uploadManufacturingCode: "Suba una foto clara del código de fabricación.",
-                codeReadable: "El código debe ser claramente legible",
-                codeFormat: "Debe comenzar con: XC, UD, 01H, WN, 4R o 54",
-                ovalNumbers: "Seguido por un círculo ovalado y 4 números",
-                removedCode: "Código Eliminado",
-                uploadRemovedCode: "Suba una foto que muestre que el código de fabricación ha sido eliminado.",
-                areaRemoved: "Mostrar el área donde se eliminó el código",
-                codeFullyRemoved: "El código debe estar completamente eliminado",
-                noTraces: "No deben quedar rastros del código original",
-                additionalPhotos: "Fotos Adicionales",
-                uploadAdditionalPhotos: "Suba cualquier foto adicional que pueda respaldar su reclamación.",
-                maxFivePhotos: "Máximo 5 fotos adicionales",
-                relevantImages: "Solo imágenes relevantes",
-                clearLighting: "Claro y bien iluminado",
-                clickUploadPhoto: "Haga clic para subir foto",
-                clickUploadPhotos: "Haga clic para subir fotos",
-                fileTypes: "JPG, PNG o GIF (Máx 5MB)",
-                multipleFiles: "Puede seleccionar múltiples archivos (Máx 5MB cada uno)",
-                additionalInfoSection: "Información Adicional",
-                comments: "Comentarios",
-                commentsPlaceholder: "Proporcione cualquier detalle adicional sobre la reclamación",
-                agreementSection: "Acuerdo",
-                agreementText: "<strong>Acuerdo:</strong> Certifico que el(los) producto(s) en este ajuste no ha(n) estado involucrado(s) en un accidente o daño a la propiedad, y que la información proporcionada es verdadera y precisa según mi leal saber y entender. Se entiende que el(los) producto(s) en este ajuste debe(n) estar disponible(s) para inspección adicional si lo solicita Yokohama-TWS.",
-                signature: "Firma",
-                date: "Fecha",
-                footerNote: "<strong>Importante:</strong> Adjunte la prueba de compra (factura de compra) al formulario de ajuste. <br>Yokohama-TWS no aceptará un ajuste si faltan los detalles necesarios, incluidas las imágenes, dentro de los 30 días posteriores a la fecha inicial del ajuste.",
-                submitOptionsTitle: "Cómo Enviar Este Formulario",
-                submitOption1: "<strong>Opción 1:</strong> Complete el formulario en línea, luego haga clic en \"Enviar Reclamo\"",
-                submitOption2: "<strong>Opción 2:</strong> Haga clic en \"Descargar PDF\" para guardar una copia, complétela y envíela por correo electrónico a agwarranties@yokohama-tws.com",
-                submitOption3: "<strong>Opción 3:</strong> Imprima el formulario completo y envíelo por correo a: Yokohama TWS, Att: Teresa Otto, 1200 Rove Ave, Charles City, IA 50616",
-                instructionsTitle: "Instrucciones para Completar el Formulario",
-                instruction1: "Complete todos los campos requeridos marcados con un asterisco (*)",
-                instruction2: "Proporcione información detallada sobre cada producto reclamado",
-                instruction3: "Incluya detalles del equipo e información de uso",
-                instruction4: "Firme y feche la sección de acuerdo",
-                instruction5: "Adjunte la prueba de compra y cualquier documento de soporte",
-                instruction6: "Envíe dentro de los 30 días posteriores a la fecha inicial del ajuste",
-                instruction7: "Incluya el mínimo recomendado de 7 fotos por producto, siguiendo la guía de ejemplos de fotos",
-                product: "Producto",
-                resetForm: "Restablecer Formulario",
-                submitPhotos: "Enviar Fotos"
-            },
-            fr: {
-                headerTitle: "YOKOHAMA TWS",
-                headerSubtitlePhoto: "Téléchargement de Photos",
-                formNumber: "Formulaire: AG-ADJUST-2025",
-                languageLabel: "Sélectionner la Langue:",
-                formNoticePhoto: "Téléchargez les photos requises pour votre réclamation d'ajustement. Assurez-vous que toutes les images respectent les exigences spécifiées.",
-                photoUploadTitle: "Téléchargement de Photos",
-                fullProfileView: "Vue de Profil Complet",
-                uploadFullProfile: "Téléchargez une photo claire montrant le profil complet du pneu.",
-                requirements: "Exigences :",
-                entireTireVisible: "Le pneu entier doit être visible",
-                sizeBrandReadable: "La taille et la marque du pneu doivent être clairement lisibles",
-                goodLighting: "La photo doit être prise avec un bon éclairage",
-                treadView: "Vue de la Bande de Roulement",
-                uploadTreadView: "Téléchargez une photo claire montrant le motif de la bande de roulement du pneu.",
-                fullTreadPattern: "Vue complète du motif de la bande de roulement du pneu",
-                depthMeasurementsVisible: "Mesures de profondeur visibles si possible",
-                noObstructions: "Assurez-vous qu'il n'y a pas d'obstructions dans la photo",
-                defectOverview: "Aperçu du Défaut",
-                uploadDefectOverview: "Téléchargez une photo bien éclairée montrant toute la zone du défaut.",
-                entireTireWithDefect: "Capturer tout le pneu avec le défaut visible",
-                highlightDefect: "Mettre en évidence la zone du défaut avec de la craie si nécessaire",
-                goodLightingFocus: "Assurez un bon éclairage et un bon focus",
-                defectCloseup: "Gros Plan du Défaut",
-                uploadDefectCloseup: "Téléchargez une photo détaillée en gros plan du défaut.",
-                clearFocusedDefect: "Image claire et focalisée du défaut",
-                depthDimensions: "Montrer la profondeur et les dimensions du défaut",
-                referenceObject: "Inclure un objet de référence pour l'échelle si possible",
-                insideView: "Vue Intérieure",
-                uploadInsideView: "Téléchargez une photo claire de l'intérieur du pneu.",
-                entireInnerSurface: "Montrer toute la surface intérieure",
-                noDebris: "Assurez-vous qu'il n'y a pas de débris obstruant la vue",
-                goodInnerLighting: "Bon éclairage pour révéler les imperfections",
-                manufacturingCode: "Code de Fabrication",
-                uploadManufacturingCode: "Téléchargez une photo claire du code de fabrication.",
-                codeReadable: "Le code doit être clairement lisible",
-                codeFormat: "Doit commencer par : XC, UD, 01H, WN, 4R ou 54",
-                ovalNumbers: "Suivi d'un cercle ovale et 4 chiffres",
-                removedCode: "Code Supprimé",
-                uploadRemovedCode: "Téléchargez une photo montrant que le code de fabrication a été supprimé.",
-                areaRemoved: "Montrer la zone où le code a été supprimé",
-                codeFullyRemoved: "Le code doit être complètement supprimé",
-                noTraces: "Aucune trace du code original ne doit être visible",
-                additionalPhotos: "Photos Additionnelles",
-                uploadAdditionalPhotos: "Téléchargez toute photo supplémentaire qui peut soutenir votre réclamation.",
-                maxFivePhotos: "Maximum 5 photos supplémentaires",
-                relevantImages: "Seulement des images pertinentes",
-                clearLighting: "Clair et bien éclairé",
-                clickUploadPhoto: "Cliquez pour télécharger la photo",
-                clickUploadPhotos: "Cliquez pour télécharger les photos",
-                fileTypes: "JPG, PNG ou GIF (Max 5MB)",
-                multipleFiles: "Vous pouvez sélectionner plusieurs fichiers (Max 5MB chacun)",
-                additionalInfoSection: "Informations Supplémentaires",
-                comments: "Commentaires",
-                commentsPlaceholder: "Fournissez tout détail supplémentaire concernant la réclamation",
-                agreementSection: "Accord",
-                agreementText: "<strong>Accord :</strong> Je certifie que le(s) produit(s) de cet ajustement n’a(ont) pas été impliqué(s) dans un accident ou des dommages matériels, et que les informations fournies sont véridiques et exactes à ma connaissance. Il est également entendu que le(s) produit(s) de cet ajustement doit(vent) être disponible(s) pour une inspection supplémentaire si requis par Yokohama-TWS.",
-                signature: "Signature",
-                date: "Date",
-                footerNote: "<strong>Important :</strong> Veuillez joindre la preuve d’achat (facture d’achat) au formulaire d’ajustement. <br>Yokohama-TWS n’acceptera pas une demande si les détails nécessaires, y compris les images, ne sont pas envoyés dans les 30 jours suivant la date initiale de l’ajustement.",
-                submitOptionsTitle: "Comment Soumettre Ce Formulaire",
-                submitOption1: "<strong>Option 1 :</strong> Remplissez le formulaire en ligne, puis cliquez sur « Soumettre la Réclamation »",
-                submitOption2: "<strong>Option 2 :</strong> Cliquez sur « Télécharger le PDF » pour enregistrer une copie, remplissez-la et envoyez-la par courriel à agwarranties@yokohama-tws.com",
-                submitOption3: "<strong>Option 3 :</strong> Imprimez le formulaire complété et envoyez-le par courrier à: Yokohama TWS, Att: Teresa Otto, 1200 Rove Ave, Charles City, IA 50616",
-                instructionsTitle: "Instructions pour Remplir le Formulaire",
-                instruction1: "Remplissez tous les champs requis marqués d’un astérisque (*)",
-                instruction2: "Fournissez des informations détaillées sur chaque produit réclamé",
-                instruction3: "Incluez les détails de l’équipement et les informations d’utilisation",
-                instruction4: "Signez et datez la section de l’accord",
-                instruction5: "Joignez la preuve d’achat et tous les documents justificatifs",
-                instruction6: "Soumettez dans les 30 jours suivant la date initiale de l’ajustement",
-                instruction7: "Incluez un minimum recommandé de 7 photos par produit, selon le guide photo",
-                product: "Produit",
-                resetForm: "Réinitialiser le Formulaire",
-                submitPhotos: "Soumettre les Photos"
-            }
-        };
+<script>
+    const translations = {
+        en: {
+            headerTitle: "YOKOHAMA TWS",
+            headerSubtitlePhoto: "Photo Upload",
+            formNumber: "Form: AG-ADJUST-2025",
+            languageLabel: "Select Language:",
+            formNoticePhoto: "Upload the required photos for your adjustment claim. Ensure all images meet the specified requirements.",
+            photoUploadTitle: "Photo Upload",
+            fullProfileView: "Full Profile View",
+            uploadFullProfile: "Upload a clear photo showing the full profile of the tire.",
+            requirements: "Requirements:",
+            entireTireVisible: "Entire tire must be visible",
+            sizeBrandReadable: "Tire size and brand must be clearly readable",
+            goodLighting: "Photo should be taken in good lighting",
+            treadView: "Tread View",
+            uploadTreadView: "Upload a clear photo showing the tire tread pattern.",
+            fullTreadPattern: "Full view of tread pattern across the tire",
+            depthMeasurementsVisible: "Depth measurements visible if possible",
+            noObstructions: "Ensure no obstructions in the photo",
+            defectOverview: "Defect Overview",
+            uploadDefectOverview: "Upload a well-lit photo showing the entire defect area.",
+            entireTireWithDefect: "Capture entire tire with defect visible",
+            highlightDefect: "Highlight defect area with chalk if needed",
+            goodLightingFocus: "Ensure good lighting and focus",
+            defectCloseup: "Defect Close-up",
+            uploadDefectCloseup: "Upload a detailed close-up photo of the defect.",
+            clearFocusedDefect: "Clear, focused image of the defect",
+            depthDimensions: "Show depth and dimensions of the defect",
+            referenceObject: "Include a reference object for scale if possible",
+            insideView: "Inside View",
+            uploadInsideView: "Upload a clear photo of the inside of the tire.",
+            entireInnerSurface: "Show the entire inner surface",
+            noDebris: "Ensure no debris obstructing the view",
+            goodInnerLighting: "Good lighting to reveal any imperfections",
+            manufacturingCode: "Manufacturing Code",
+            uploadManufacturingCode: "Upload a clear photo of the manufacturing code.",
+            codeReadable: "Code must be clearly readable",
+            codeFormat: "Should start with: XC, UD, 01H, WN, 4R or 54",
+            ovalNumbers: "Followed by an oval circle and 4 numbers",
+            removedCode: "Removed Code",
+            uploadRemovedCode: "Upload a photo showing the manufacturing code has been removed.",
+            areaRemoved: "Show the area where code was removed",
+            codeFullyRemoved: "Code must be completely removed",
+            noTraces: "No traces of the original code visible",
+            additionalPhotos: "Additional Photos",
+            uploadAdditionalPhotos: "Upload any additional photos that may support your claim.",
+            maxFivePhotos: "Maximum 5 additional photos",
+            relevantImages: "Only relevant images",
+            clearLighting: "Clear and well-lit",
+            clickUploadPhoto: "Click to upload photo",
+            clickUploadPhotos: "Click to upload photos",
+            fileTypes: "JPG, PNG or GIF (Max 5MB)",
+            multipleFiles: "You can select multiple files (Max 5MB each)",
+            additionalInfoSection: "Additional Information",
+            comments: "Comments",
+            commentsPlaceholder: "Provide any additional details about the claim",
+            agreementSection: "Agreement",
+            agreementText: "<strong>Agreement:</strong> I certify that the product(s) in this adjustment has not been involved in an accident or property damage, and that the information provided is true and accurate to the best of my knowledge. It is further understood that the product(s) in this adjustment should be available for further inspection if requested by Yokohama-TWS.",
+            signature: "Signature",
+            date: "Date",
+            footerNote: "<strong>Important:</strong> Please attach Proof of Purchase (purchase invoice) to adjustment form. <br>Yokohama-TWS will not accept an adjustment if the necessary details, including images, are not sent within 30 days of the initial adjustment date.",
+            submitOptionsTitle: "How to Submit This Form",
+            submitOption1: "<strong>Option 1:</strong> Fill out the form online, then click \"Submit Claim\"",
+            submitOption2: "<strong>Option 2:</strong> Click \"Download PDF\" to save a copy, fill it out, and email to agwarranties@yokohama-tws.com",
+            submitOption3: "<strong>Option 3:</strong> Print the completed form and mail to: Yokohama TWS, Att: Teresa Otto, 1200 Rove Ave, Charles City, IA 50616",
+            instructionsTitle: "Instructions for Completing the Form",
+            instruction1: "Complete all required fields marked with an asterisk (*)",
+            instruction2: "Provide detailed information about each product being claimed",
+            instruction3: "Include equipment details and usage information",
+            instruction4: "Sign and date the agreement section",
+            instruction5: "Attach proof of purchase and any supporting documents",
+            instruction6: "Submit within 30 days of the initial adjustment date",
+            instruction7: "Include the recommended minimum of 7 photos per product, following the photo example guide",
+            product: "Product",
+            resetForm: "Reset Form",
+            submitPhotos: "Submit Photos"
+        },
+        es: {
+            headerTitle: "YOKOHAMA TWS",
+            headerSubtitlePhoto: "Carga de Fotos",
+            formNumber: "Formulario: AG-ADJUST-2025",
+            languageLabel: "Seleccionar Idioma:",
+            formNoticePhoto: "Suba las fotos requeridas para su reclamación de ajuste. Asegúrese de que todas las imágenes cumplan con los requisitos especificados.",
+            photoUploadTitle: "Carga de Fotos",
+            fullProfileView: "Vista de Perfil Completo",
+            uploadFullProfile: "Suba una foto clara que muestre el perfil completo del neumático.",
+            requirements: "Requisitos:",
+            entireTireVisible: "El neumático completo debe ser visible",
+            sizeBrandReadable: "El tamaño y la marca del neumático deben ser claramente legibles",
+            goodLighting: "La foto debe tomarse con buena iluminación",
+            treadView: "Vista de la Banda de Rodadura",
+            uploadTreadView: "Suba una foto clara que muestre el patrón de la banda de rodadura del neumático.",
+            fullTreadPattern: "Vista completa del patrón de la banda de rodadura del neumático",
+            depthMeasurementsVisible: "Mediciones de profundidad visibles si es posible",
+            noObstructions: "Asegúrese de que no haya obstrucciones en la foto",
+            defectOverview: "Vista General del Defecto",
+            uploadDefectOverview: "Suba una foto bien iluminada que muestre toda el área del defecto.",
+            entireTireWithDefect: "Capturar todo el neumático con el defecto visible",
+            highlightDefect: "Resaltar el área del defecto con tiza si es necesario",
+            goodLightingFocus: "Asegúrese de buena iluminación y enfoque",
+            defectCloseup: "Primer Plano del Defecto",
+            uploadDefectCloseup: "Suba una foto detallada de cerca del defecto.",
+            clearFocusedDefect: "Imagen clara y enfocada del defecto",
+            depthDimensions: "Mostrar la profundidad y dimensiones del defecto",
+            referenceObject: "Incluir un objeto de referencia para la escala si es posible",
+            insideView: "Vista Interior",
+            uploadInsideView: "Suba una foto clara del interior del neumático.",
+            entireInnerSurface: "Mostrar toda la superficie interior",
+            noDebris: "Asegúrese de que no haya escombros obstruyendo la vista",
+            goodInnerLighting: "Buena iluminación para revelar imperfecciones",
+            manufacturingCode: "Código de Fabricación",
+            uploadManufacturingCode: "Suba una foto clara del código de fabricación.",
+            codeReadable: "El código debe ser claramente legible",
+            codeFormat: "Debe comenzar con: XC, UD, 01H, WN, 4R o 54",
+            ovalNumbers: "Seguido por un círculo ovalado y 4 números",
+            removedCode: "Código Eliminado",
+            uploadRemovedCode: "Suba una foto que muestre que el código de fabricación ha sido eliminado.",
+            areaRemoved: "Mostrar el área donde se eliminó el código",
+            codeFullyRemoved: "El código debe estar completamente eliminado",
+            noTraces: "No deben quedar rastros del código original",
+            additionalPhotos: "Fotos Adicionales",
+            uploadAdditionalPhotos: "Suba cualquier foto adicional que pueda respaldar su reclamación.",
+            maxFivePhotos: "Máximo 5 fotos adicionales",
+            relevantImages: "Solo imágenes relevantes",
+            clearLighting: "Claro y bien iluminado",
+            clickUploadPhoto: "Haga clic para subir foto",
+            clickUploadPhotos: "Haga clic para subir fotos",
+            fileTypes: "JPG, PNG o GIF (Máx 5MB)",
+            multipleFiles: "Puede seleccionar múltiples archivos (Máx 5MB cada uno)",
+            additionalInfoSection: "Información Adicional",
+            comments: "Comentarios",
+            commentsPlaceholder: "Proporcione cualquier detalle adicional sobre la reclamación",
+            agreementSection: "Acuerdo",
+            agreementText: "<strong>Acuerdo:</strong> Certifico que el(los) producto(s) en este ajuste no ha(n) estado involucrado(s) en un accidente o daño a la propiedad, y que la información proporcionada es verdadera y precisa según mi leal saber y entender. Se entiende que el(los) producto(s) en este ajuste debe(n) estar disponible(s) para inspección adicional si lo solicita Yokohama-TWS.",
+            signature: "Firma",
+            date: "Fecha",
+            footerNote: "<strong>Importante:</strong> Adjunte la prueba de compra (factura de compra) al formulario de ajuste. <br>Yokohama-TWS no aceptará un ajuste si faltan los detalles necesarios, incluidas las imágenes, dentro de los 30 días posteriores a la fecha inicial del ajuste.",
+            submitOptionsTitle: "Cómo Enviar Este Formulario",
+            submitOption1: "<strong>Opción 1:</strong> Complete el formulario en línea, luego haga clic en \"Enviar Reclamo\"",
+            submitOption2: "<strong>Opción 2:</strong> Haga clic en \"Descargar PDF\" para guardar una copia, complétela y envíela por correo electrónico a agwarranties@yokohama-tws.com",
+            submitOption3: "<strong>Opción 3:</strong> Imprima el formulario completo y envíelo por correo a: Yokohama TWS, Att: Teresa Otto, 1200 Rove Ave, Charles City, IA 50616",
+            instructionsTitle: "Instrucciones para Completar el Formulario",
+            instruction1: "Complete todos los campos requeridos marcados con un asterisco (*)",
+            instruction2: "Proporcione información detallada sobre cada producto reclamado",
+            instruction3: "Incluya detalles del equipo e información de uso",
+            instruction4: "Firme y feche la sección de acuerdo",
+            instruction5: "Adjunte la prueba de compra y cualquier documento de soporte",
+            instruction6: "Envíe dentro de los 30 días posteriores a la fecha inicial del ajuste",
+            instruction7: "Incluya el mínimo recomendado de 7 fotos por producto, siguiendo la guía de ejemplos de fotos",
+            product: "Producto",
+            resetForm: "Restablecer Formulario",
+            submitPhotos: "Enviar Fotos"
+        },
+        fr: {
+            headerTitle: "YOKOHAMA TWS",
+            headerSubtitlePhoto: "Téléchargement de Photos",
+            formNumber: "Formulaire: AG-ADJUST-2025",
+            languageLabel: "Sélectionner la Langue:",
+            formNoticePhoto: "Téléchargez les photos requises pour votre réclamation d'ajustement. Assurez-vous que toutes les images respectent les exigences spécifiées.",
+            photoUploadTitle: "Téléchargement de Photos",
+            fullProfileView: "Vue de Profil Complet",
+            uploadFullProfile: "Téléchargez une photo claire montrant le profil complet du pneu.",
+            requirements: "Exigences :",
+            entireTireVisible: "Le pneu entier doit être visible",
+            sizeBrandReadable: "La taille et la marque du pneu doivent être clairement lisibles",
+            goodLighting: "La photo doit être prise avec un bon éclairage",
+            treadView: "Vue de la Bande de Roulement",
+            uploadTreadView: "Téléchargez une photo claire montrant le motif de la bande de roulement du pneu.",
+            fullTreadPattern: "Vue complète du motif de la bande de roulement du pneu",
+            depthMeasurementsVisible: "Mesures de profondeur visibles si possible",
+            noObstructions: "Assurez-vous qu'il n'y a pas d'obstructions dans la photo",
+            defectOverview: "Aperçu du Défaut",
+            uploadDefectOverview: "Téléchargez une photo bien éclairée montrant toute la zone du défaut.",
+            entireTireWithDefect: "Capturer tout le pneu avec le défaut visible",
+            highlightDefect: "Mettre en évidence la zone du défaut avec de la craie si nécessaire",
+            goodLightingFocus: "Assurez un bon éclairage et un bon focus",
+            defectCloseup: "Gros Plan du Défaut",
+            uploadDefectCloseup: "Téléchargez une photo détaillée en gros plan du défaut.",
+            clearFocusedDefect: "Image claire et focalisée du défaut",
+            depthDimensions: "Montrer la profondeur et les dimensions du défaut",
+            referenceObject: "Inclure un objet de référence pour l'échelle si possible",
+            insideView: "Vue Intérieure",
+            uploadInsideView: "Téléchargez une photo claire de l'intérieur du pneu.",
+            entireInnerSurface: "Montrer toute la surface intérieure",
+            noDebris: "Assurez-vous qu'il n'y a pas de débris obstruant la vue",
+            goodInnerLighting: "Bon éclairage pour révéler les imperfections",
+            manufacturingCode: "Code de Fabrication",
+            uploadManufacturingCode: "Téléchargez une photo claire du code de fabrication.",
+            codeReadable: "Le code doit être clairement lisible",
+            codeFormat: "Doit commencer par : XC, UD, 01H, WN, 4R ou 54",
+            ovalNumbers: "Suivi d'un cercle ovale et 4 chiffres",
+            removedCode: "Code Supprimé",
+            uploadRemovedCode: "Téléchargez une photo montrant que le code de fabrication a été supprimé.",
+            areaRemoved: "Montrer la zone où le code a été supprimé",
+            codeFullyRemoved: "Le code doit être complètement supprimé",
+            noTraces: "Aucune trace du code original ne doit être visible",
+            additionalPhotos: "Photos Additionnelles",
+            uploadAdditionalPhotos: "Téléchargez toute photo supplémentaire qui peut soutenir votre réclamation.",
+            maxFivePhotos: "Maximum 5 photos supplémentaires",
+            relevantImages: "Seulement des images pertinentes",
+            clearLighting: "Clair et bien éclairé",
+            clickUploadPhoto: "Cliquez pour télécharger la photo",
+            clickUploadPhotos: "Cliquez pour télécharger les photos",
+            fileTypes: "JPG, PNG ou GIF (Max 5MB)",
+            multipleFiles: "Vous pouvez sélectionner plusieurs fichiers (Max 5MB chacun)",
+            additionalInfoSection: "Informations Supplémentaires",
+            comments: "Commentaires",
+            commentsPlaceholder: "Fournissez tout détail supplémentaire concernant la réclamation",
+            agreementSection: "Accord",
+            agreementText: "<strong>Accord :</strong> Je certifie que le(s) produit(s) de cet ajustement n’a(ont) pas été impliqué(s) dans un accident ou des dommages matériels, et que les informations fournies sont véridiques et exactes à ma connaissance. Il est également entendu que le(s) produit(s) de cet ajustement doit(vent) être disponible(s) pour une inspection supplémentaire si requis par Yokohama-TWS.",
+            signature: "Signature",
+            date: "Date",
+            footerNote: "<strong>Important :</strong> Veuillez joindre la preuve d’achat (facture d’achat) au formulaire d’ajustement. <br>Yokohama-TWS n’acceptera pas une demande si les détails nécessaires, y compris les images, ne sont pas envoyés dans les 30 jours suivant la date initiale de l’ajustement.",
+            submitOptionsTitle: "Comment Soumettre Ce Formulaire",
+            submitOption1: "<strong>Option 1 :</strong> Remplissez le formulaire en ligne, puis cliquez sur « Soumettre la Réclamation »",
+            submitOption2: "<strong>Option 2 :</strong> Cliquez sur « Télécharger le PDF » pour enregistrer une copie, remplissez-la et envoyez-la par courriel à agwarranties@yokohama-tws.com",
+            submitOption3: "<strong>Option 3 :</strong> Imprimez le formulaire complété et envoyez-le par courrier à: Yokohama TWS, Att: Teresa Otto, 1200 Rove Ave, Charles City, IA 50616",
+            instructionsTitle: "Instructions pour Remplir le Formulaire",
+            instruction1: "Remplissez tous les champs requis marqués d’un astérisque (*)",
+            instruction2: "Fournissez des informations détaillées sur chaque produit réclamé",
+            instruction3: "Incluez les détails de l’équipement et les informations d’utilisation",
+            instruction4: "Signez et datez la section de l’accord",
+            instruction5: "Joignez la preuve d’achat et tous les documents justificatifs",
+            instruction6: "Soumettez dans les 30 jours suivant la date initiale de l’ajustement",
+            instruction7: "Incluez un minimum recommandé de 7 photos par produit, selon le guide photo",
+            product: "Produit",
+            resetForm: "Réinitialiser le Formulaire",
+            submitPhotos: "Soumettre les Photos"
+        }
+    };
 
-        // Function to update form text based on selected language
-        function updateLanguage(lang) {
-            document.querySelectorAll('[data-translate]').forEach(element => {
-                const key = element.getAttribute('data-translate');
-                element.innerHTML = translations[lang][key] || key;
+    // Function to update form text based on selected language
+    function updateLanguage(lang) {
+        document.querySelectorAll('[data-translate]').forEach(element => {
+            const key = element.getAttribute('data-translate');
+            element.innerHTML = translations[lang][key] || key;
+        });
+
+        document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
+            const key = element.getAttribute('data-translate-placeholder');
+            element.placeholder = translations[lang][key] || '';
+        });
+
+        document.querySelectorAll('select option[data-translate]').forEach(option => {
+            const key = option.getAttribute('data-translate');
+            option.textContent = translations[lang][key] || key;
+        });
+
+        document.documentElement.lang = lang;
+    }
+
+    // Initialize form and populate product cards based on quantity from URL
+    document.addEventListener('DOMContentLoaded', () => {
+        updateLanguage('en');
+
+        const languageSelect = document.getElementById('languageSelect');
+        if (languageSelect) {
+            languageSelect.addEventListener('change', function() {
+                updateLanguage(this.value);
             });
-
-            document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
-                const key = element.getAttribute('data-translate-placeholder');
-                element.placeholder = translations[lang][key] || '';
-            });
-
-            document.querySelectorAll('select option[data-translate]').forEach(option => {
-                const key = option.getAttribute('data-translate');
-                option.textContent = translations[lang][key] || key;
-            });
-
-            document.documentElement.lang = lang;
         }
 
-        // Initialize form and populate product cards based on quantity from URL
-        document.addEventListener('DOMContentLoaded', () => {
-            updateLanguage('en');
+        const urlParams = new URLSearchParams(window.location.search);
+        const quantity = parseInt(urlParams.get('quantity') || '1');
+        const productCards = document.getElementById('productCards');
 
-            const languageSelect = document.getElementById('languageSelect');
-            if (languageSelect) {
-                languageSelect.addEventListener('change', function() {
-                    updateLanguage(this.value);
-                });
-            }
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const quantity = parseInt(urlParams.get('quantity') || '1');
-            const productCards = document.getElementById('productCards');
-
-            // Generate product cards dynamically based on quantity
-            for (let i = 1; i <= quantity; i++) {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.id = `product${i}`;
-                card.innerHTML = `
-                    <h4><i class="fas fa-tire"></i> <span data-translate="product">Product</span> ${i}</h4>
-                    <div class="form-grid">
-                        <div class="upload-section">
-                            <div class="section-header">
-                                <h3 class="section-title-upload" data-translate="fullProfileView">Full Profile View</h3>
-                                <div class="help-icon">?</div>
-                            </div>
-                            <div class="section-content">
-                                <p data-translate="uploadFullProfile">Upload a clear photo showing the full profile of the tire.</p>
-                                <div class="requirements">
-                                    <strong data-translate="requirements">Requirements:</strong>
-                                    <ul>
-                                        <li data-translate="entireTireVisible">Entire tire must be visible</li>
-                                        <li data-translate="sizeBrandReadable">Tire size and brand must be clearly readable</li>
-                                        <li data-translate="goodLighting">Photo should be taken in good lighting</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="upload-area">
-                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
-                                <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
-                                <input type="file" id="file${i}-1" name="file${i}-1" class="file-input" accept="image/*" required>
-                            </div>
-                            <div class="preview-container" id="preview${i}-1"></div>
+        // Generate product cards dynamically based on quantity
+        for (let i = 1; i <= quantity; i++) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.id = `product${i}`;
+            card.innerHTML = `
+                <h4><i class="fas fa-tire"></i> <span data-translate="product">Product</span> ${i}</h4>
+                <div class="form-grid">
+                    <div class="upload-section">
+                        <div class="section-header">
+                            <h3 class="section-title-upload" data-translate="fullProfileView">Full Profile View</h3>
+                            <div class="help-icon">?</div>
                         </div>
-                        <div class="upload-section">
-                            <div class="section-header">
-                                <h3 class="section-title-upload" data-translate="treadView">Tread View</h3>
-                                <div class="help-icon">?</div>
+                        <div class="section-content">
+                            <p data-translate="uploadFullProfile">Upload a clear photo showing the full profile of the tire.</p>
+                            <div class="requirements">
+                                <strong data-translate="requirements">Requirements:</strong>
+                                <ul>
+                                    <li data-translate="entireTireVisible">Entire tire must be visible</li>
+                                    <li data-translate="sizeBrandReadable">Tire size and brand must be clearly readable</li>
+                                    <li data-translate="goodLighting">Photo should be taken in good lighting</li>
+                                </ul>
                             </div>
-                            <div class="section-content">
-                                <p data-translate="uploadTreadView">Upload a clear photo showing the tire tread pattern.</p>
-                                <div class="requirements">
-                                    <strong data-translate="requirements">Requirements:</strong>
-                                    <ul>
-                                        <li data-translate="fullTreadPattern">Full view of tread pattern across the tire</li>
-                                        <li data-translate="depthMeasurementsVisible">Depth measurements visible if possible</li>
-                                        <li data-translate="noObstructions">Ensure no obstructions in the photo</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="upload-area">
-                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
-                                <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
-                                <input type="file" id="file${i}-2" name="file${i}-2" class="file-input" accept="image/*" required>
-                            </div>
-                            <div class="preview-container" id="preview${i}-2"></div>
                         </div>
-                        <div class="upload-section">
-                            <div class="section-header">
-                                <h3 class="section-title-upload" data-translate="defectOverview">Defect Overview</h3>
-                                <div class="help-icon">?</div>
-                            </div>
-                            <div class="section-content">
-                                <p data-translate="uploadDefectOverview">Upload a well-lit photo showing the entire defect area.</p>
-                                <div class="requirements">
-                                    <strong data-translate="requirements">Requirements:</strong>
-                                    <ul>
-                                        <li data-translate="entireTireWithDefect">Capture entire tire with defect visible</li>
-                                        <li data-translate="highlightDefect">Highlight defect area with chalk if needed</li>
-                                        <li data-translate="goodLightingFocus">Ensure good lighting and focus</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="upload-area">
-                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
-                                <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
-                                <input type="file" id="file${i}-3" name="file${i}-3" class="file-input" accept="image/*" required>
-                            </div>
-                            <div class="preview-container" id="preview${i}-3"></div>
+                        <div class="upload-area" id="upload-area-${i}-1">
+                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                            <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                            <input type="file" id="file${i}-1" name="file${i}-1" class="file-input" accept="image/*" required>
                         </div>
-                        <div class="upload-section">
-                            <div class="section-header">
-                                <h3 class="section-title-upload" data-translate="defectCloseup">Defect Close-up</h3>
-                                <div class="help-icon">?</div>
-                            </div>
-                            <div class="section-content">
-                                <p data-translate="uploadDefectCloseup">Upload a detailed close-up photo of the defect.</p>
-                                <div class="requirements">
-                                    <strong data-translate="requirements">Requirements:</strong>
-                                    <ul>
-                                        <li data-translate="clearFocusedDefect">Clear, focused image of the defect</li>
-                                        <li data-translate="depthDimensions">Show depth and dimensions of the defect</li>
-                                        <li data-translate="referenceObject">Include a reference object for scale if possible</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="upload-area">
-                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
-                                <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
-                                <input type="file" id="file${i}-4" name="file${i}-4" class="file-input" accept="image/*" required>
-                            </div>
-                            <div class="preview-container" id="preview${i}-4"></div>
-                        </div>
-                        <div class="upload-section">
-                            <div class="section-header">
-                                <h3 class="section-title-upload" data-translate="insideView">Inside View</h3>
-                                <div class="help-icon">?</div>
-                            </div>
-                            <div class="section-content">
-                                <p data-translate="uploadInsideView">Upload a clear photo of the inside of the tire.</p>
-                                <div class="requirements">
-                                    <strong data-translate="requirements">Requirements:</strong>
-                                    <ul>
-                                        <li data-translate="entireInnerSurface">Show the entire inner surface</li>
-                                        <li data-translate="noDebris">Ensure no debris obstructing the view</li>
-                                        <li data-translate="goodInnerLighting">Good lighting to reveal any imperfections</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="upload-area">
-                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
-                                <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
-                                <input type="file" id="file${i}-5" name="file${i}-5" class="file-input" accept="image/*" required>
-                            </div>
-                            <div class="preview-container" id="preview${i}-5"></div>
-                        </div>
-                        <div class="upload-section">
-                            <div class="section-header">
-                                <h3 class="section-title-upload" data-translate="manufacturingCode">Manufacturing Code</h3>
-                                <div class="help-icon">?</div>
-                            </div>
-                            <div class="section-content">
-                                <p data-translate="uploadManufacturingCode">Upload a clear photo of the manufacturing code.</p>
-                                <div class="requirements">
-                                    <strong data-translate="requirements">Requirements:</strong>
-                                    <ul>
-                                        <li data-translate="codeReadable">Code must be clearly readable</li>
-                                        <li data-translate="codeFormat">Should start with: XC, UD, 01H, WN, 4R or 54</li>
-                                        <li data-translate="ovalNumbers">Followed by an oval circle and 4 numbers</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="upload-area">
-                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
-                                <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
-                                <input type="file" id="file${i}-6" name="file${i}-6" class="file-input" accept="image/*" required>
-                            </div>
-                            <div class="preview-container" id="preview${i}-6"></div>
-                        </div>
-                        <div class="upload-section">
-                            <div class="section-header">
-                                <h3 class="section-title-upload" data-translate="removedCode">Removed Code</h3>
-                                <div class="help-icon">?</div>
-                            </div>
-                            <div class="section-content">
-                                <p data-translate="uploadRemovedCode">Upload a photo showing the manufacturing code has been removed.</p>
-                                <div class="requirements">
-                                    <strong data-translate="requirements">Requirements:</strong>
-                                    <ul>
-                                        <li data-translate="areaRemoved">Show the area where code was removed</li>
-                                        <li data-translate="codeFullyRemoved">Code must be completely removed</li>
-                                        <li data-translate="noTraces">No traces of the original code visible</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="upload-area">
-                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
-                                <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
-                                <input type="file" id="file${i}-7" name="file${i}-7" class="file-input" accept="image/*" required>
-                            </div>
-                            <div class="preview-container" id="preview${i}-7"></div>
-                        </div>
-                        <div class="upload-section">
-                            <div class="section-header">
-                                <h3 class="section-title-upload" data-translate="additionalPhotos">Additional Photos</h3>
-                                <div class="help-icon">?</div>
-                            </div>
-                            <div class="section-content">
-                                <p data-translate="uploadAdditionalPhotos">Upload any additional photos that may support your claim.</p>
-                                <div class="requirements">
-                                    <strong data-translate="requirements">Requirements:</strong>
-                                    <ul>
-                                        <li data-translate="maxFivePhotos">Maximum 5 additional photos</li>
-                                        <li data-translate="relevantImages">Only relevant images</li>
-                                        <li data-translate="clearLighting">Clear and well-lit</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="upload-area">
-                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                <p class="upload-text" data-translate="clickUploadPhotos">Click to upload photos</p>
-                                <p class="upload-text"><small data-translate="multipleFiles">You can select multiple files (Max 5MB each)</small></p>
-                                <input type="file" id="file${i}-8" name="file${i}-8" class="file-input" accept="image/*" multiple>
-                            </div>
-                            <div class="preview-container" id="preview${i}-8"></div>
-                        </div>
+                        <div class="preview-container" id="preview${i}-1"></div>
                     </div>
-                `;
-                productCards.appendChild(card);
-            }
+                    <div class="upload-section">
+                        <div class="section-header">
+                            <h3 class="section-title-upload" data-translate="treadView">Tread View</h3>
+                            <div class="help-icon">?</div>
+                        </div>
+                        <div class="section-content">
+                            <p data-translate="uploadTreadView">Upload a clear photo showing the tire tread pattern.</p>
+                            <div class="requirements">
+                                <strong data-translate="requirements">Requirements:</strong>
+                                <ul>
+                                    <li data-translate="fullTreadPattern">Full view of tread pattern across the tire</li>
+                                    <li data-translate="depthMeasurementsVisible">Depth measurements visible if possible</li>
+                                    <li data-translate="noObstructions">Ensure no obstructions in the photo</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="upload-area" id="upload-area-${i}-2">
+                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                            <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                            <input type="file" id="file${i}-2" name="file${i}-2" class="file-input" accept="image/*" required>
+                        </div>
+                        <div class="preview-container" id="preview${i}-2"></div>
+                    </div>
+                    <div class="upload-section">
+                        <div class="section-header">
+                            <h3 class="section-title-upload" data-translate="defectOverview">Defect Overview</h3>
+                            <div class="help-icon">?</div>
+                        </div>
+                        <div class="section-content">
+                            <p data-translate="uploadDefectOverview">Upload a well-lit photo showing the entire defect area.</p>
+                            <div class="requirements">
+                                <strong data-translate="requirements">Requirements:</strong>
+                                <ul>
+                                    <li data-translate="entireTireWithDefect">Capture entire tire with defect visible</li>
+                                    <li data-translate="highlightDefect">Highlight defect area with chalk if needed</li>
+                                    <li data-translate="goodLightingFocus">Ensure good lighting and focus</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="upload-area" id="upload-area-${i}-3">
+                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                            <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                            <input type="file" id="file${i}-3" name="file${i}-3" class="file-input" accept="image/*" required>
+                        </div>
+                        <div class="preview-container" id="preview${i}-3"></div>
+                    </div>
+                    <div class="upload-section">
+                        <div class="section-header">
+                            <h3 class="section-title-upload" data-translate="defectCloseup">Defect Close-up</h3>
+                            <div class="help-icon">?</div>
+                        </div>
+                        <div class="section-content">
+                            <p data-translate="uploadDefectCloseup">Upload a detailed close-up photo of the defect.</p>
+                            <div class="requirements">
+                                <strong data-translate="requirements">Requirements:</strong>
+                                <ul>
+                                    <li data-translate="clearFocusedDefect">Clear, focused image of the defect</li>
+                                    <li data-translate="depthDimensions">Show depth and dimensions of the defect</li>
+                                    <li data-translate="referenceObject">Include a reference object for scale if possible</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="upload-area" id="upload-area-${i}-4">
+                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                            <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                            <input type="file" id="file${i}-4" name="file${i}-4" class="file-input" accept="image/*" required>
+                        </div>
+                        <div class="preview-container" id="preview${i}-4"></div>
+                    </div>
+                    <div class="upload-section">
+                        <div class="section-header">
+                            <h3 class="section-title-upload" data-translate="insideView">Inside View</h3>
+                            <div class="help-icon">?</div>
+                        </div>
+                        <div class="section-content">
+                            <p data-translate="uploadInsideView">Upload a clear photo of the inside of the tire.</p>
+                            <div class="requirements">
+                                <strong data-translate="requirements">Requirements:</strong>
+                                <ul>
+                                    <li data-translate="entireInnerSurface">Show the entire inner surface</li>
+                                    <li data-translate="noDebris">Ensure no debris obstructing the view</li>
+                                    <li data-translate="goodInnerLighting">Good lighting to reveal any imperfections</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="upload-area" id="upload-area-${i}-5">
+                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                            <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                            <input type="file" id="file${i}-5" name="file${i}-5" class="file-input" accept="image/*" required>
+                        </div>
+                        <div class="preview-container" id="preview${i}-5"></div>
+                    </div>
+                    <div class="upload-section">
+                        <div class="section-header">
+                            <h3 class="section-title-upload" data-translate="manufacturingCode">Manufacturing Code</h3>
+                            <div class="help-icon">?</div>
+                        </div>
+                        <div class="section-content">
+                            <p data-translate="uploadManufacturingCode">Upload a clear photo of the manufacturing code.</p>
+                            <div class="requirements">
+                                <strong data-translate="requirements">Requirements:</strong>
+                                <ul>
+                                    <li data-translate="codeReadable">Code must be clearly readable</li>
+                                    <li data-translate="codeFormat">Should start with: XC, UD, 01H, WN, 4R or 54</li>
+                                    <li data-translate="ovalNumbers">Followed by an oval circle and 4 numbers</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="upload-area" id="upload-area-${i}-6">
+                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                            <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                            <input type="file" id="file${i}-6" name="file${i}-6" class="file-input" accept="image/*" required>
+                        </div>
+                        <div class="preview-container" id="preview${i}-6"></div>
+                    </div>
+                    <div class="upload-section">
+                        <div class="section-header">
+                            <h3 class="section-title-upload" data-translate="removedCode">Removed Code</h3>
+                            <div class="help-icon">?</div>
+                        </div>
+                        <div class="section-content">
+                            <p data-translate="uploadRemovedCode">Upload a photo showing the manufacturing code has been removed.</p>
+                            <div class="requirements">
+                                <strong data-translate="requirements">Requirements:</strong>
+                                <ul>
+                                    <li data-translate="areaRemoved">Show the area where code was removed</li>
+                                    <li data-translate="codeFullyRemoved">Code must be completely removed</li>
+                                    <li data-translate="noTraces">No traces of the original code visible</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="upload-area" id="upload-area-${i}-7">
+                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                            <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                            <input type="file" id="file${i}-7" name="file${i}-7" class="file-input" accept="image/*" required>
+                        </div>
+                        <div class="preview-container" id="preview${i}-7"></div>
+                    </div>
+                    <div class="upload-section">
+                        <div class="section-header">
+                            <h3 class="section-title-upload" data-translate="additionalPhotos">Additional Photos</h3>
+                            <div class="help-icon">?</div>
+                        </div>
+                        <div class="section-content">
+                            <p data-translate="uploadAdditionalPhotos">Upload any additional photos that may support your claim.</p>
+                            <div class="requirements">
+                                <strong data-translate="requirements">Requirements:</strong>
+                                <ul>
+                                    <li data-translate="maxFivePhotos">Maximum 5 additional photos</li>
+                                    <li data-translate="relevantImages">Only relevant images</li>
+                                    <li data-translate="clearLighting">Clear and well-lit</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="upload-area" id="upload-area-${i}-8">
+                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <p class="upload-text" data-translate="clickUploadPhotos">Click to upload photos</p>
+                            <p class="upload-text"><small data-translate="multipleFiles">You can select multiple files (Max 5MB each)</small></p>
+                            <input type="file" id="file${i}-8" name="file${i}-8" class="file-input" accept="image/*" multiple>
+                        </div>
+                        <div class="preview-container" id="preview${i}-8"></div>
+                    </div>
+                </div>
+            `;
+            productCards.appendChild(card);
+        }
 
-            // Photo upload handling
-            const uploadStatus = {};
-            for (let i = 1; i <= quantity; i++) {
-                uploadStatus[i] = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false, 8: false };
+        // Photo upload handling
+        const uploadStatus = {};
+        for (let i = 1; i <= quantity; i++) {
+            uploadStatus[i] = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false, 8: false };
 
-                function bindUploadAreaEvents(productNum) {
-                    const uploadAreas = document.querySelectorAll(`#product${productNum} .upload-area`);
-                    uploadAreas.forEach(area => {
-                        const fileInput = area.querySelector('.file-input');
-                        if (fileInput) {
-                            area.addEventListener('click', () => fileInput.click());
-                        }
+            // Bind click events to upload areas
+            const uploadAreas = document.querySelectorAll(`#product${i} .upload-area`);
+            uploadAreas.forEach(area => {
+                const fileInput = area.querySelector('.file-input');
+                if (fileInput) {
+                    area.addEventListener('click', () => {
+                        console.log(`Click event triggered for upload area: ${area.id}`);
+                        fileInput.click();
                     });
+                } else {
+                    console.error(`File input not found for upload area: ${area.id}`);
                 }
+            });
 
-                function handleFileSelect(event, sectionNumber, productNumber) {
+            // Bind change events to file inputs
+            const fileInputs = document.querySelectorAll(`#product${i} .file-input`);
+            fileInputs.forEach(input => {
+                const [_, productNumber, sectionNumber] = input.id.split('-').map(part => {
+                    const num = parseInt(part);
+                    return isNaN(num) ? part : num;
+                });
+                input.addEventListener('change', (event) => {
+                    console.log(`File input changed for product ${productNumber}, section ${sectionNumber}`);
+                    handleFileSelect(event, sectionNumber, productNumber);
+                });
+            });
+
+            function handleFileSelect(event, sectionNumber, productNumber) {
+                try {
                     const files = event.target.files;
+                    if (!files || files.length === 0) {
+                        console.warn(`No files selected for product ${productNumber}, section ${sectionNumber}`);
+                        return;
+                    }
+
                     const previewContainer = document.getElementById(`preview${productNumber}-${sectionNumber}`);
-                    if (previewContainer) {
-                        previewContainer.innerHTML = '';
-                        previewContainer.style.display = 'flex';
-
-                        const fileCount = sectionNumber === 8 ? Math.min(files.length, 5) : 1;
-                        let validFiles = 0;
-                        for (let j = 0; j < fileCount; j++) {
-                            const file = files[j];
-                            if (file.type.match('image.*')) {
-                                validFiles++;
-                                const reader = new FileReader();
-                                reader.onload = function(e) {
-                                    const img = document.createElement('img');
-                                    img.className = 'preview-image';
-                                    img.src = e.target.result;
-                                    img.title = file.name;
-                                    previewContainer.appendChild(img);
-                                };
-                                reader.readAsDataURL(file);
-                            }
-                        }
-                        uploadStatus[productNumber][sectionNumber] = validFiles > 0;
+                    if (!previewContainer) {
+                        console.error(`Preview container not found: preview${productNumber}-${sectionNumber}`);
+                        return;
                     }
+
+                    previewContainer.innerHTML = '';
+                    previewContainer.style.display = 'flex';
+
+                    const fileCount = sectionNumber === 8 ? Math.min(files.length, 5) : 1;
+                    let validFiles = 0;
+                    for (let j = 0; j < fileCount; j++) {
+                        const file = files[j];
+                        if (file.type.match('image.*')) {
+                            validFiles++;
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const img = document.createElement('img');
+                                img.className = 'preview-image';
+                                img.src = e.target.result;
+                                img.title = file.name;
+                                previewContainer.appendChild(img);
+                                console.log(`Preview added for file: ${file.name}`);
+                            };
+                            reader.onerror = function(e) {
+                                console.error(`Error reading file ${file.name}:`, e);
+                            };
+                            reader.readAsDataURL(file);
+                        } else {
+                            console.warn(`File ${file.name} is not an image and will be ignored.`);
+                        }
+                    }
+                    uploadStatus[productNumber][sectionNumber] = validFiles > 0;
+                    console.log(`Upload status updated: product ${productNumber}, section ${sectionNumber}, status: ${uploadStatus[productNumber][sectionNumber]}`);
+                } catch (error) {
+                    console.error(`Error in handleFileSelect for product ${productNumber}, section ${sectionNumber}:`, error);
                 }
-
-                const fileInputs = document.querySelectorAll(`#product${i} .file-input`);
-                fileInputs.forEach(input => {
-                    const [_, productNumber, sectionNumber] = input.id.split('-').map(Number);
-                    input.addEventListener('change', (event) => handleFileSelect(event, sectionNumber, productNumber));
-                });
-
-                bindUploadAreaEvents(i);
             }
+        }
 
-            // Reset form handling
-            const resetBtn = document.querySelector('.btn-reset');
-            if (resetBtn) {
-                resetBtn.addEventListener('click', function() {
-                    const lang = document.getElementById('languageSelect').value;
-                    if (confirm(translations[lang].resetForm + '?')) {
-                        document.getElementById('photoForm').reset();
-                        document.querySelectorAll('.preview-container').forEach(container => {
-                            container.innerHTML = '';
-                            container.style.display = 'none';
-                        });
-                        for (let i = 1; i <= quantity; i++) {
-                            uploadStatus[i] = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false, 8: false };
-                        }
+        // Reset form handling
+        const resetBtn = document.querySelector('.btn-reset');
+        if (resetBtn) {
+            resetBtn.addEventListener('change', function() {
+                const lang = document.getElementById('languageSelect').value;
+                if (confirm(translations[lang].resetForm + '?')) {
+                    document.getElementById('photoForm').reset();
+                    document.querySelectorAll('.preview-container').forEach(container => {
+                        container.innerHTML = '';
+                        container.style.display = 'none';
+                    });
+                    for (let i = 1; i <= quantity; i++) {
+                        uploadStatus[i] = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false, 8: false };
                     }
-                });
-            }
-        });
-    </script>
+                    console.log('Form reset completed.');
+                }
+            });
+        }
+
+        // Form submission handling (for logging purposes)
+        const photoForm = document.getElementById('photoForm');
+        if (photoForm) {
+            photoForm.addEventListener('submit', (event) => {
+                console.log('Form submission triggered.');
+                const formData = new FormData(photoForm);
+                for (let [key, value] of formData.entries()) {
+                    console.log(`Form data: ${key} = ${value}`);
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>
