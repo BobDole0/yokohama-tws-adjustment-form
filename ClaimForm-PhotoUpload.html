@@ -690,8 +690,8 @@
             <p data-translate="formNoticePhoto">Upload the required photos for your adjustment claim. Ensure all images meet the specified requirements.</p>
         </div>
         
-        <form id="photoForm" data-netlify="true">
-            <input type="hidden" name="form-name" value="photoForm">
+<form id="photoForm" data-netlify="true" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="form-name" value="photoForm">
             <!-- Photo Upload Section -->
             <div class="form-section">
                 <div class="section-title">
