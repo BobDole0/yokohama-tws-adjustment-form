@@ -692,17 +692,17 @@
         
 <form id="photoForm" data-netlify="true" method="POST" enctype="multipart/form-data" action="/success">
         <input type="hidden" name="form-name" value="photoForm">   
-            <!-- Photo Upload Section -->
-            <div class="form-section">
-                <div class="section-title">
-                    <i class="fas fa-camera"></i>
-                    <span data-translate="photoUploadTitle">Photo Upload</span>
-                </div>
-                <div class="product-grid" id="productCards">
-                    <!-- Product cards will be dynamically populated based on quantity -->
-                </div>
-            </div>
-
+            <<!-- Commented out Photo Upload Section to test form submission without file uploads
+<div class="form-section">
+    <div class="section-title">
+        <i class="fas fa-camera"></i>
+        <span data-translate="photoUploadTitle">Photo Upload</span>
+    </div>
+    <div class="product-grid" id="productCards">
+        <!-- Product cards will be dynamically populated based on quantity -->
+    </div>
+</div>
+-->
             <!-- Additional Information Section -->
             <div class="form-section">
                 <div class="section-title">
@@ -1043,300 +1043,302 @@
         const quantity = parseInt(urlParams.get('quantity') || '1');
         const productCards = document.getElementById('productCards');
 
-        // Generate product cards dynamically based on quantity
-        for (let i = 1; i <= quantity; i++) {
-            const card = document.createElement('div');
-            card.className = 'product-card';
-            card.id = `product${i}`;
-            card.innerHTML = `
-                <h4><i class="fas fa-tire"></i> <span data-translate="product">Product</span> ${i}</h4>
-                <div class="form-grid">
-                    <div class="upload-section">
-                        <div class="section-header">
-                            <h3 class="section-title-upload" data-translate="fullProfileView">Full Profile View</h3>
-                            <div class="help-icon">?</div>
-                        </div>
-                        <div class="section-content">
-                            <p data-translate="uploadFullProfile">Upload a clear photo showing the full profile of the tire.</p>
-                            <div class="requirements">
-                                <strong data-translate="requirements">Requirements:</strong>
-                                <ul>
-                                    <li data-translate="entireTireVisible">Entire tire must be visible</li>
-                                    <li data-translate="sizeBrandReadable">Tire size and brand must be clearly readable</li>
-                                    <li data-translate="goodLighting">Photo should be taken in good lighting</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="upload-area" id="upload-area-${i}-1">
-                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                            <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
-                            <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
-                            <input type="file" id="file-${i}-1" name="file-${i}-1" class="file-input" accept="image/*" required>
-                        </div>
-                        <div class="preview-container" id="preview-${i}-1"></div>
-                    </div>
-                    <div class="upload-section">
-                        <div class="section-header">
-                            <h3 class="section-title-upload" data-translate="treadView">Tread View</h3>
-                            <div class="help-icon">?</div>
-                        </div>
-                        <div class="section-content">
-                            <p data-translate="uploadTreadView">Upload a clear photo showing the tire tread pattern.</p>
-                            <div class="requirements">
-                                <strong data-translate="requirements">Requirements:</strong>
-                                <ul>
-                                    <li data-translate="fullTreadPattern">Full view of tread pattern across the tire</li>
-                                    <li data-translate="depthMeasurementsVisible">Depth measurements visible if possible</li>
-                                    <li data-translate="noObstructions">Ensure no obstructions in the photo</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="upload-area" id="upload-area-${i}-2">
-                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                            <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
-                            <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
-                            <input type="file" id="file-${i}-2" name="file-${i}-2" class="file-input" accept="image/*" required>
-                        </div>
-                        <div class="preview-container" id="preview-${i}-2"></div>
-                    </div>
-                    <div class="upload-section">
-                        <div class="section-header">
-                            <h3 class="section-title-upload" data-translate="defectOverview">Defect Overview</h3>
-                            <div class="help-icon">?</div>
-                        </div>
-                        <div class="section-content">
-                            <p data-translate="uploadDefectOverview">Upload a well-lit photo showing the entire defect area.</p>
-                            <div class="requirements">
-                                <strong data-translate="requirements">Requirements:</strong>
-                                <ul>
-                                    <li data-translate="entireTireWithDefect">Capture entire tire with defect visible</li>
-                                    <li data-translate="highlightDefect">Highlight defect area with chalk if needed</li>
-                                    <li data-translate="goodLightingFocus">Ensure good lighting and focus</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="upload-area" id="upload-area-${i}-3">
-                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                            <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
-                            <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
-                            <input type="file" id="file-${i}-3" name="file-${i}-3" class="file-input" accept="image/*" required>
-                        </div>
-                        <div class="preview-container" id="preview-${i}-3"></div>
-                    </div>
-                    <div class="upload-section">
-                        <div class="section-header">
-                            <h3 class="section-title-upload" data-translate="defectCloseup">Defect Close-up</h3>
-                            <div class="help-icon">?</div>
-                        </div>
-                        <div class="section-content">
-                            <p data-translate="uploadDefectCloseup">Upload a detailed close-up photo of the defect.</p>
-                            <div class="requirements">
-                                <strong data-translate="requirements">Requirements:</strong>
-                                <ul>
-                                    <li data-translate="clearFocusedDefect">Clear, focused image of the defect</li>
-                                    <li data-translate="depthDimensions">Show depth and dimensions of the defect</li>
-                                    <li data-translate="referenceObject">Include a reference object for scale if possible</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="upload-area" id="upload-area-${i}-4">
-                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                            <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
-                            <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
-                            <input type="file" id="file-${i}-4" name="file-${i}-4" class="file-input" accept="image/*" required>
-                        </div>
-                        <div class="preview-container" id="preview-${i}-4"></div>
-                    </div>
-                    <div class="upload-section">
-                        <div class="section-header">
-                            <h3 class="section-title-upload" data-translate="insideView">Inside View</h3>
-                            <div class="help-icon">?</div>
-                        </div>
-                        <div class="section-content">
-                            <p data-translate="uploadInsideView">Upload a clear photo of the inside of the tire.</p>
-                            <div class="requirements">
-                                <strong data-translate="requirements">Requirements:</strong>
-                                <ul>
-                                    <li data-translate="entireInnerSurface">Show the entire inner surface</li>
-                                    <li data-translate="noDebris">Ensure no debris obstructing the view</li>
-                                    <li data-translate="goodInnerLighting">Good lighting to reveal any imperfections</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="upload-area" id="upload-area-${i}-5">
-                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                            <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
-                            <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
-                            <input type="file" id="file-${i}-5" name="file-${i}-5" class="file-input" accept="image/*" required>
-                        </div>
-                        <div class="preview-container" id="preview-${i}-5"></div>
-                    </div>
-                    <div class="upload-section">
-                        <div class="section-header">
-                            <h3 class="section-title-upload" data-translate="manufacturingCode">Manufacturing Code</h3>
-                            <div class="help-icon">?</div>
-                        </div>
-                        <div class="section-content">
-                            <p data-translate="uploadManufacturingCode">Upload a clear photo of the manufacturing code.</p>
-                            <div class="requirements">
-                                <strong data-translate="requirements">Requirements:</strong>
-                                <ul>
-                                    <li data-translate="codeReadable">Code must be clearly readable</li>
-                                    <li data-translate="codeFormat">Should start with: XC, UD, 01H, WN, 4R or 54</li>
-                                    <li data-translate="ovalNumbers">Followed by an oval circle and 4 numbers</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="upload-area" id="upload-area-${i}-6">
-                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                            <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
-                            <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
-                            <input type="file" id="file-${i}-6" name="file-${i}-6" class="file-input" accept="image/*" required>
-                        </div>
-                        <div class="preview-container" id="preview-${i}-6"></div>
-                    </div>
-                    <div class="upload-section">
-                        <div class="section-header">
-                            <h3 class="section-title-upload" data-translate="removedCode">Removed Code</h3>
-                            <div class="help-icon">?</div>
-                        </div>
-                        <div class="section-content">
-                            <p data-translate="uploadRemovedCode">Upload a photo showing the manufacturing code has been removed.</p>
-                            <div class="requirements">
-                                <strong data-translate="requirements">Requirements:</strong>
-                                <ul>
-                                    <li data-translate="areaRemoved">Show the area where code was removed</li>
-                                    <li data-translate="codeFullyRemoved">Code must be completely removed</li>
-                                    <li data-translate="noTraces">No traces of the original code visible</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="upload-area" id="upload-area-${i}-7">
-                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                            <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
-                            <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
-                            <input type="file" id="file-${i}-7" name="file-${i}-7" class="file-input" accept="image/*" required>
-                        </div>
-                        <div class="preview-container" id="preview-${i}-7"></div>
-                    </div>
-                    <div class="upload-section">
-                        <div class="section-header">
-                            <h3 class="section-title-upload" data-translate="additionalPhotos">Additional Photos</h3>
-                            <div class="help-icon">?</div>
-                        </div>
-                        <div class="section-content">
-                            <p data-translate="uploadAdditionalPhotos">Upload any additional photos that may support your claim.</p>
-                            <div class="requirements">
-                                <strong data-translate="requirements">Requirements:</strong>
-                                <ul>
-                                    <li data-translate="maxFivePhotos">Maximum 5 additional photos</li>
-                                    <li data-translate="relevantImages">Only relevant images</li>
-                                    <li data-translate="clearLighting">Clear and well-lit</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="upload-area" id="upload-area-${i}-8">
-                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                            <p class="upload-text" data-translate="clickUploadPhotos">Click to upload photos</p>
-                            <p class="upload-text"><small data-translate="multipleFiles">You can select multiple files (Max 5MB each)</small></p>
-                            <input type="file" id="file-${i}-8" name="file-${i}-8" class="file-input" accept="image/*" multiple>
-                        </div>
-                        <div class="preview-container" id="preview-${i}-8"></div>
+/* Commented out product card generation and upload handling to test form submission without file uploads
+// Generate product cards dynamically based on quantity
+for (let i = 1; i <= quantity; i++) {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.id = `product${i}`;
+    card.innerHTML = `
+        <h4><i class="fas fa-tire"></i> <span data-translate="product">Product</span> ${i}</h4>
+        <div class="form-grid">
+            <div class="upload-section">
+                <div class="section-header">
+                    <h3 class="section-title-upload" data-translate="fullProfileView">Full Profile View</h3>
+                    <div class="help-icon">?</div>
+                </div>
+                <div class="section-content">
+                    <p data-translate="uploadFullProfile">Upload a clear photo showing the full profile of the tire.</p>
+                    <div class="requirements">
+                        <strong data-translate="requirements">Requirements:</strong>
+                        <ul>
+                            <li data-translate="entireTireVisible">Entire tire must be visible</li>
+                            <li data-translate="sizeBrandReadable">Tire size and brand must be clearly readable</li>
+                            <li data-translate="goodLighting">Photo should be taken in good lighting</li>
+                        </ul>
                     </div>
                 </div>
-            `;
-            productCards.appendChild(card);
+                <div class="upload-area" id="upload-area-${i}-1">
+                    <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                    <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                    <input type="file" id="file-${i}-1" name="file-${i}-1" class="file-input" accept="image/*" required>
+                </div>
+                <div class="preview-container" id="preview-${i}-1"></div>
+            </div>
+            <div class="upload-section">
+                <div class="section-header">
+                    <h3 class="section-title-upload" data-translate="treadView">Tread View</h3>
+                    <div class="help-icon">?</div>
+                </div>
+                <div class="section-content">
+                    <p data-translate="uploadTreadView">Upload a clear photo showing the tire tread pattern.</p>
+                    <div class="requirements">
+                        <strong data-translate="requirements">Requirements:</strong>
+                        <ul>
+                            <li data-translate="fullTreadPattern">Full view of tread pattern across the tire</li>
+                            <li data-translate="depthMeasurementsVisible">Depth measurements visible if possible</li>
+                            <li data-translate="noObstructions">Ensure no obstructions in the photo</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="upload-area" id="upload-area-${i}-2">
+                    <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                    <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                    <input type="file" id="file-${i}-2" name="file-${i}-2" class="file-input" accept="image/*" required>
+                </div>
+                <div class="preview-container" id="preview-${i}-2"></div>
+            </div>
+            <div class="upload-section">
+                <div class="section-header">
+                    <h3 class="section-title-upload" data-translate="defectOverview">Defect Overview</h3>
+                    <div class="help-icon">?</div>
+                </div>
+                <div class="section-content">
+                    <p data-translate="uploadDefectOverview">Upload a well-lit photo showing the entire defect area.</p>
+                    <div class="requirements">
+                        <strong data-translate="requirements">Requirements:</strong>
+                        <ul>
+                            <li data-translate="entireTireWithDefect">Capture entire tire with defect visible</li>
+                            <li data-translate="highlightDefect">Highlight defect area with chalk if needed</li>
+                            <li data-translate="goodLightingFocus">Ensure good lighting and focus</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="upload-area" id="upload-area-${i}-3">
+                    <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                    <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                    <input type="file" id="file-${i}-3" name="file-${i}-3" class="file-input" accept="image/*" required>
+                </div>
+                <div class="preview-container" id="preview-${i}-3"></div>
+            </div>
+            <div class="upload-section">
+                <div class="section-header">
+                    <h3 class="section-title-upload" data-translate="defectCloseup">Defect Close-up</h3>
+                    <div class="help-icon">?</div>
+                </div>
+                <div class="section-content">
+                    <p data-translate="uploadDefectCloseup">Upload a detailed close-up photo of the defect.</p>
+                    <div class="requirements">
+                        <strong data-translate="requirements">Requirements:</strong>
+                        <ul>
+                            <li data-translate="clearFocusedDefect">Clear, focused image of the defect</li>
+                            <li data-translate="depthDimensions">Show depth and dimensions of the defect</li>
+                            <li data-translate="referenceObject">Include a reference object for scale if possible</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="upload-area" id="upload-area-${i}-4">
+                    <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                    <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                    <input type="file" id="file-${i}-4" name="file-${i}-4" class="file-input" accept="image/*" required>
+                </div>
+                <div class="preview-container" id="preview-${i}-4"></div>
+            </div>
+            <div class="upload-section">
+                <div class="section-header">
+                    <h3 class="section-title-upload" data-translate="insideView">Inside View</h3>
+                    <div class="help-icon">?</div>
+                </div>
+                <div class="section-content">
+                    <p data-translate="uploadInsideView">Upload a clear photo of the inside of the tire.</p>
+                    <div class="requirements">
+                        <strong data-translate="requirements">Requirements:</strong>
+                        <ul>
+                            <li data-translate="entireInnerSurface">Show the entire inner surface</li>
+                            <li data-translate="noDebris">Ensure no debris obstructing the view</li>
+                            <li data-translate="goodInnerLighting">Good lighting to reveal any imperfections</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="upload-area" id="upload-area-${i}-5">
+                    <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                    <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                    <input type="file" id="file-${i}-5" name="file-${i}-5" class="file-input" accept="image/*" required>
+                </div>
+                <div class="preview-container" id="preview-${i}-5"></div>
+            </div>
+            <div class="upload-section">
+                <div class="section-header">
+                    <h3 class="section-title-upload" data-translate="manufacturingCode">Manufacturing Code</h3>
+                    <div class="help-icon">?</div>
+                </div>
+                <div class="section-content">
+                    <p data-translate="uploadManufacturingCode">Upload a clear photo of the manufacturing code.</p>
+                    <div class="requirements">
+                        <strong data-translate="requirements">Requirements:</strong>
+                        <ul>
+                            <li data-translate="codeReadable">Code must be clearly readable</li>
+                            <li data-translate="codeFormat">Should start with: XC, UD, 01H, WN, 4R or 54</li>
+                            <li data-translate="ovalNumbers">Followed by an oval circle and 4 numbers</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="upload-area" id="upload-area-${i}-6">
+                    <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                    <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                    <input type="file" id="file-${i}-6" name="file-${i}-6" class="file-input" accept="image/*" required>
+                </div>
+                <div class="preview-container" id="preview-${i}-6"></div>
+            </div>
+            <div class="upload-section">
+                <div class="section-header">
+                    <h3 class="section-title-upload" data-translate="removedCode">Removed Code</h3>
+                    <div class="help-icon">?</div>
+                </div>
+                <div class="section-content">
+                    <p data-translate="uploadRemovedCode">Upload a photo showing the manufacturing code has been removed.</p>
+                    <div class="requirements">
+                        <strong data-translate="requirements">Requirements:</strong>
+                        <ul>
+                            <li data-translate="areaRemoved">Show the area where code was removed</li>
+                            <li data-translate="codeFullyRemoved">Code must be completely removed</li>
+                            <li data-translate="noTraces">No traces of the original code visible</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="upload-area" id="upload-area-${i}-7">
+                    <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                    <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                    <input type="file" id="file-${i}-7" name="file-${i}-7" class="file-input" accept="image/*" required>
+                </div>
+                <div class="preview-container" id="preview-${i}-7"></div>
+            </div>
+            <div class="upload-section">
+                <div class="section-header">
+                    <h3 class="section-title-upload" data-translate="additionalPhotos">Additional Photos</h3>
+                    <div class="help-icon">?</div>
+                </div>
+                <div class="section-content">
+                    <p data-translate="uploadAdditionalPhotos">Upload any additional photos that may support your claim.</p>
+                    <div class="requirements">
+                        <strong data-translate="requirements">Requirements:</strong>
+                        <ul>
+                            <li data-translate="maxFivePhotos">Maximum 5 additional photos</li>
+                            <li data-translate="relevantImages">Only relevant images</li>
+                            <li data-translate="clearLighting">Clear and well-lit</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="upload-area" id="upload-area-${i}-8">
+                    <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <p class="upload-text" data-translate="clickUploadPhotos">Click to upload photos</p>
+                    <p class="upload-text"><small data-translate="multipleFiles">You can select multiple files (Max 5MB each)</small></p>
+                    <input type="file" id="file-${i}-8" name="file-${i}-8" class="file-input" accept="image/*" multiple>
+                </div>
+                <div class="preview-container" id="preview-${i}-8"></div>
+            </div>
+        </div>
+    `;
+    productCards.appendChild(card);
+}
+
+// Photo upload handling
+const uploadStatus = {};
+for (let i = 1; i <= quantity; i++) {
+    uploadStatus[i] = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false, 8: false };
+
+    // Bind click events to upload areas
+    const uploadAreas = document.querySelectorAll(`#product${i} .upload-area`);
+    uploadAreas.forEach(area => {
+        const fileInput = area.querySelector('.file-input');
+        if (fileInput) {
+            area.addEventListener('click', () => {
+                console.log(`Click event triggered for upload area: ${area.id}`);
+                fileInput.click();
+            });
+        } else {
+            console.error(`File input not found for upload area: ${area.id}`);
         }
+    });
 
-        // Photo upload handling
-        const uploadStatus = {};
-        for (let i = 1; i <= quantity; i++) {
-            uploadStatus[i] = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false, 8: false };
+    // Bind change events to file inputs
+    const fileInputs = document.querySelectorAll(`#product${i} .file-input`);
+    fileInputs.forEach(input => {
+        const idParts = input.id.split('-');
+        if (idParts.length !== 3) {
+            console.error(`Invalid file input ID format: ${input.id}. Expected format: file-productNumber-sectionNumber`);
+            return;
+        }
+        const [, productNumber, sectionNumber] = idParts.map(part => parseInt(part) || part);
+        if (typeof productNumber !== 'number' || typeof sectionNumber !== 'number') {
+            console.error(`Failed to parse productNumber or sectionNumber from ID: ${input.id}`);
+            return;
+        }
+        input.addEventListener('change', (event) => {
+            console.log(`File input changed for product ${productNumber}, section ${sectionNumber}`);
+            handleFileSelect(event, sectionNumber, productNumber);
+        });
+    });
 
-            // Bind click events to upload areas
-            const uploadAreas = document.querySelectorAll(`#product${i} .upload-area`);
-            uploadAreas.forEach(area => {
-                const fileInput = area.querySelector('.file-input');
-                if (fileInput) {
-                    area.addEventListener('click', () => {
-                        console.log(`Click event triggered for upload area: ${area.id}`);
-                        fileInput.click();
-                    });
+    function handleFileSelect(event, sectionNumber, productNumber) {
+        try {
+            if (typeof sectionNumber === 'undefined' || typeof productNumber === 'undefined') {
+                throw new Error(`Invalid parameters: productNumber=${productNumber}, sectionNumber=${sectionNumber}`);
+            }
+            const files = event.target.files;
+            if (!files || files.length === 0) {
+                console.warn(`No files selected for product ${productNumber}, section ${sectionNumber}`);
+                return;
+            }
+
+            const previewContainerId = `preview-${productNumber}-${sectionNumber}`;
+            const previewContainer = document.getElementById(previewContainerId);
+            if (!previewContainer) {
+                console.error(`Preview container not found: ${previewContainerId}`);
+                return;
+            }
+
+            previewContainer.innerHTML = '';
+            previewContainer.style.display = 'flex';
+
+            const fileCount = sectionNumber === 8 ? Math.min(files.length, 5) : 1;
+            let validFiles = 0;
+            for (let j = 0; j < fileCount; j++) {
+                const file = files[j];
+                if (file.type.match('image.*')) {
+                    validFiles++;
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.className = 'preview-image';
+                        img.src = e.target.result;
+                        img.title = file.name;
+                        previewContainer.appendChild(img);
+                        console.log(`Preview added for file: ${file.name}`);
+                    };
+                    reader.onerror = function(e) {
+                        console.error(`Error reading file ${file.name}:`, e);
+                    };
+                    reader.readAsDataURL(file);
                 } else {
-                    console.error(`File input not found for upload area: ${area.id}`);
-                }
-            });
-
-            // Bind change events to file inputs
-            const fileInputs = document.querySelectorAll(`#product${i} .file-input`);
-            fileInputs.forEach(input => {
-                const idParts = input.id.split('-');
-                if (idParts.length !== 3) {
-                    console.error(`Invalid file input ID format: ${input.id}. Expected format: file-productNumber-sectionNumber`);
-                    return;
-                }
-                const [, productNumber, sectionNumber] = idParts.map(part => parseInt(part) || part);
-                if (typeof productNumber !== 'number' || typeof sectionNumber !== 'number') {
-                    console.error(`Failed to parse productNumber or sectionNumber from ID: ${input.id}`);
-                    return;
-                }
-                input.addEventListener('change', (event) => {
-                    console.log(`File input changed for product ${productNumber}, section ${sectionNumber}`);
-                    handleFileSelect(event, sectionNumber, productNumber);
-                });
-            });
-
-            function handleFileSelect(event, sectionNumber, productNumber) {
-                try {
-                    if (typeof sectionNumber === 'undefined' || typeof productNumber === 'undefined') {
-                        throw new Error(`Invalid parameters: productNumber=${productNumber}, sectionNumber=${sectionNumber}`);
-                    }
-                    const files = event.target.files;
-                    if (!files || files.length === 0) {
-                        console.warn(`No files selected for product ${productNumber}, section ${sectionNumber}`);
-                        return;
-                    }
-
-                    const previewContainerId = `preview-${productNumber}-${sectionNumber}`;
-                    const previewContainer = document.getElementById(previewContainerId);
-                    if (!previewContainer) {
-                        console.error(`Preview container not found: ${previewContainerId}`);
-                        return;
-                    }
-
-                    previewContainer.innerHTML = '';
-                    previewContainer.style.display = 'flex';
-
-                    const fileCount = sectionNumber === 8 ? Math.min(files.length, 5) : 1;
-                    let validFiles = 0;
-                    for (let j = 0; j < fileCount; j++) {
-                        const file = files[j];
-                        if (file.type.match('image.*')) {
-                            validFiles++;
-                            const reader = new FileReader();
-                            reader.onload = function(e) {
-                                const img = document.createElement('img');
-                                img.className = 'preview-image';
-                                img.src = e.target.result;
-                                img.title = file.name;
-                                previewContainer.appendChild(img);
-                                console.log(`Preview added for file: ${file.name}`);
-                            };
-                            reader.onerror = function(e) {
-                                console.error(`Error reading file ${file.name}:`, e);
-                            };
-                            reader.readAsDataURL(file);
-                        } else {
-                            console.warn(`File ${file.name} is not an image and will be ignored.`);
-                        }
-                    }
-                    uploadStatus[productNumber][sectionNumber] = validFiles > 0;
-                    console.log(`Upload status updated: product ${productNumber}, section ${sectionNumber}, status: ${uploadStatus[productNumber][sectionNumber]}`);
-                } catch (error) {
-                    console.error(`Error in handleFileSelect for product ${productNumber}, section ${sectionNumber}:`, error);
+                    console.warn(`File ${file.name} is not an image and will be ignored.`);
                 }
             }
+            uploadStatus[productNumber][sectionNumber] = validFiles > 0;
+            console.log(`Upload status updated: product ${productNumber}, section ${sectionNumber}, status: ${uploadStatus[productNumber][sectionNumber]}`);
+        } catch (error) {
+            console.error(`Error in handleFileSelect for product ${productNumber}, section ${sectionNumber}:`, error);
         }
+    }
+}
+*/
 
         // Reset form handling
         const resetBtn = document.querySelector('.btn-reset');
