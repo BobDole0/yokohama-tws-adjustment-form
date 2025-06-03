@@ -1,0 +1,1422 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yokohama TWS Adjustment Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Lexend', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f2f2f2 0%, #e6e6e6 100%);
+            padding: 15px;
+            color: #333;
+            line-height: 2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        header {
+            background: #ec2431;
+            color: white;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            z-index: 2;
+        }
+        
+        .title h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            letter-spacing: -0.2px;
+        }
+        
+        .title p {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: normal;
+        }
+        
+        .form-notice {
+            background: #f2f2f2;
+            padding: 15px 25px;
+            font-size: 16px;
+            border-bottom: 2px solid #cccccc;
+            display: flex;
+            align-items: center;
+            color: #333;
+        }
+        
+        .form-notice i {
+            margin-right: 10px;
+            font-size: 24px;
+            color: #ec2431;
+        }
+        
+        .form-section {
+            padding: 30px 25px;
+            border-bottom: 1px solid #333;
+            background: #fff;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #ec2431;
+            display: flex;
+            align-items: center;
+            padding-left: 15px;
+            border-left: 5px solid #9b6b55;
+            letter-spacing: -0.8px;
+        }
+        
+        .section-title i {
+            margin-right: 15px;
+            color: #9b6b55;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -15px;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 150px;
+            padding: 0 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: inline-block;
+            margin-bottom: 10px;
+            font-weight: normal;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: #f9f9f9;
+            font-family: 'Lexend', sans-serif;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            border-color: #9b6b55;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(155, 255, 85, 0.2);
+            background: #fff;
+        }
+        
+        .form-group textarea {
+            height: 100px;
+            resize: auto;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .product-card {
+            background: #f2f2f2;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        
+        .product-card.hidden {
+            display: none;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+        
+        .product-card h4 {
+            margin-bottom: 20px;
+            color: #ec2431;
+            font-size: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #9b6b55;
+            display: flex;
+            align-items: center;
+            letter-spacing: -0.5px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 8px;
+        }
+        
+        .checkbox-group label {
+            margin-bottom: 0;
+            font-weight: normal;
+            margin-left: 4px;
+        }
+        
+        .checkbox-group input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            margin: 0;
+        }
+        
+        .radio-container {
+            display: flex;
+            flex-direction: column;
+            align-items: left;
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            padding: 25px;
+            gap: 20px;
+            flex-wrap: wrap;
+            background: #f9f9f9;
+        }
+        
+        .btn {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            font-family: 'Lexend', sans-serif;
+            letter-spacing: -0.5px;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-submit {
+            background: #ec2431;
+            color: white;
+        }
+        
+        .btn-download {
+            background: #9b6b55;
+            color: white;
+        }
+        
+        .btn-reset {
+            background: #666666;
+            color: white;
+        }
+        
+        .language-selector {
+            padding: 15px 25px;
+            background: #f9f9f9;
+            border-bottom: 1px solid #cccccc;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .language-selector label {
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .language-selector select {
+            padding: 10px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            font-size: 15px;
+            background: #fff;
+            cursor: pointer;
+        }
+        
+        .language-selector select:focus {
+            border-color: #9b6b55;
+            outline: none;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+            }
+            
+            .language-selector {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        
+        .tractor-icon {
+            position: absolute;
+            right: 30px;
+            top: 30px;
+            font-size: 50px;
+            color: rgba(255,255,255,0.3);
+            z-index: 1;
+        }
+        
+        .required:after {
+            content: " *";
+            color: #ec2431;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="title">
+                    <h1 data-translate="headerTitle">YOKOHAMA TWS</h1>
+                    <p data-translate="headerSubtitle">Adjustment Form</p>
+                </div>
+            </div>
+            <div class="form-number">
+                <p data-translate="formNumber">Form: AG-ADJUST-2025</p>
+            </div>
+            <i class="fas fa-tractor tractor-icon"></i>
+        </header>
+        
+        <div class="language-selector">
+            <label for="languageSelect" data-translate="languageLabel">Select Language:</label>
+            <select id="languageSelect">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+            </select>
+        </div>
+        
+        <div class="form-notice">
+            <i class="fas fa-info-circle"></i>
+            <p data-translate="formNotice">Complete this form to file an adjustment claim for Yokohama TWS agricultural products. All sections must be filled accurately.</p>
+        </div>
+        
+        <form id="claimForm" action="ClaimForm-PhotoUpload.html" method="GET">
+            <input type="hidden" name="form-name" value="claimForm">
+            <!-- Claim Information Section -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-file-alt"></i>
+                    <span data-translate="claimInfoTitle">Claim Information</span>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="claimDate" class="required" data-translate="claimDate">Date</label>
+                        <input type="date" id="claimDate" name="claimDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adjustNumber" data-translate="adjustNumber">Distributor Adjustment Number</label>
+                        <input type="text" id="adjustNumber" name="adjustNumber">
+                    </div>
+                    <div class="form-group">
+                        <label for="accountNumber" data-translate="accountNumber">Distributor Account Number</label>
+                        <input type="text" id="accountNumber" name="accountNumber">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Information Section -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-users"></i>
+                    <span data-translate="contactInfoTitle">Contact Information</span>
+                </div>
+                
+                <h3 style="color: #333; margin: 0 0 20px 15px; font-size: 16px;"><i class="fas fa-truck"></i> <span data-translate="distributorInfo">Authorized Distributor Information</span></h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="distributorName" class="required" data-translate="distributorName">Distributor Name</label>
+                        <input type="text" id="distributorName" name="distributorName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="distributorPhone" data-translate="phone">Phone #</label>
+                        <input type="tel" id="distributorPhone" name="distributorPhone">
+                    </div>
+                    <div class="form-group">
+                        <label for="distributorEmail" class="required" data-translate="email">Email</label>
+                        <input type="email" id="distributorEmail" name="distributorEmail" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="distributorAddress" data-translate="address">Address</label>
+                        <input type="text" id="distributorAddress" name="distributorAddress">
+                    </div>
+                    <div class="form-group">
+                        <label for="distributorCity" data-translate="city">City</label>
+                        <input type="text" id="distributorCity" name="distributorCity">
+                    </div>
+                    <div class="form-group">
+                        <label for="distributorState" data-translate="state">State</label>
+                        <input type="text" id="distributorState" name="distributorState">
+                    </div>
+                    <div class="form-group">
+                        <label for="distributorZip" data-translate="zip">ZIP</label>
+                        <input type="text" id="distributorZip" name="distributorZip">
+                    </div>
+                </div>
+                
+                <h3 style="color: #333; margin: 30px 0 20px 15px; font-size: 16px;"><i class="fas fa-store"></i> <span data-translate="dealerInfo">Associate Dealer / Equipment Dealer Information</span></h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dealerName" data-translate="dealerName">Dealer Name</label>
+                        <input type="text" id="dealerName" name="dealerName">
+                    </div>
+                    <div class="form-group">
+                        <label for="dealerPhone" data-translate="phone">Phone #</label>
+                        <input type="tel" id="dealerPhone" name="dealerPhone">
+                    </div>
+                    <div class="form-group">
+                        <label for="dealerEmail" data-translate="email">Email</label>
+                        <input type="email" id="dealerEmail" name="dealerEmail">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dealerAddress" data-translate="address">Address</label>
+                        <input type="text" id="dealerAddress" name="dealerAddress">
+                    </div>
+                    <div class="form-group">
+                        <label for="dealerCity" data-translate="city">City</label>
+                        <input type="text" id="dealerCity" name="dealerCity">
+                    </div>
+                    <div class="form-group">
+                        <label for="dealerState" data-translate="state">State</label>
+                        <input type="text" id="dealerState" name="dealerState">
+                    </div>
+                    <div class="form-group">
+                        <label for="dealerZip" data-translate="zip">ZIP</label>
+                        <input type="text" id="dealerZip" name="dealerZip">
+                    </div>
+                </div>
+                
+                <h3 style="color: #333; margin: 30px 0 20px 15px; font-size: 16px;"><i class="fas fa-user"></i> <span data-translate="consumerInfo">End User (Consumer) Information</span></h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="consumerName" class="required" data-translate="consumerName">Full Name</label>
+                        <input type="text" id="consumerName" name="consumerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="consumerPhone" data-translate="phone">Phone #</label>
+                        <input type="tel" id="consumerPhone" name="consumerPhone">
+                    </div>
+                    <div class="form-group">
+                        <label for="consumerEmail" class="required" data-translate="email">Email</label>
+                        <input type="email" id="consumerEmail" name="consumerEmail" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="consumerAddress" data-translate="address">Address</label>
+                        <input type="text" id="consumerAddress" name="consumerAddress">
+                    </div>
+                    <div class="form-group">
+                        <label for="consumerCity" class="required" data-translate="city">City</label>
+                        <input type="text" id="consumerCity" name="consumerCity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="consumerState" class="required" data-translate="state">State</label>
+                        <input type="text" id="consumerState" name="consumerState" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="consumerZip" data-translate="zip">ZIP</label>
+                        <input type="text" id="consumerZip" name="consumerZip">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Equipment Information Section -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-tractor"></i>
+                    <span data-translate="equipmentInfoTitle">Equipment Information</span>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="vin" data-translate="vin">VIN</label>
+                        <input type="text" id="vin" name="vin">
+                    </div>
+                    <div class="form-group">
+                        <label for="year" data-translate="year">Year</label>
+                        <input type="number" id="year" name="year" min="1900" max="2099">
+                    </div>
+                    <div class="form-group">
+                        <label for="make" data-translate="make">Make</label>
+                        <input type="text" id="make" name="make">
+                    </div>
+                    <div class="form-group">
+                        <label for="model" data-translate="model">Model</label>
+                        <input type="text" id="model" name="model">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="equipmentHours" data-translate="equipmentHours">Equipment Hours</label>
+                        <input type="number" id="equipmentHours" name="equipmentHours" min="0">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Installation & Service Section -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-cogs"></i>
+                    <span data-translate="installServiceTitle">Installation & Service Information</span>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="originalEquipment" class="required" data-translate="originalEquipment">Original Equipment?</label>
+                        <div class="radio-container">
+                            <div class="checkbox-group">
+                                <input type="radio" id="originalYes" name="originalEquipment" value="yes" required>
+                                <label for="originalYes" data-translate="yes">Yes</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="radio" id="originalNo" name="originalEquipment" value="no">
+                                <label for="originalNo" data-translate="no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="installDate" id="installDateLabel" data-translate="installDate">Installation Date</label>
+                        <input type="date" id="installDate" name="installDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="replaced" class="required" data-translate="replaced">Replaced?</label>
+                        <div class="radio-container">
+                            <div class="checkbox-group">
+                                <input type="radio" id="replacedYes" name="replaced" value="yes" required>
+                                <label for="replacedYes" data-translate="yes">Yes</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="radio" id="replacedNo" name="replaced" value="no">
+                                <label for="replacedNo" data-translate="no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="replaceDate" id="replaceDateLabel" data-translate="replaceDate">Replacement Date</label>
+                        <input type="date" id="replaceDate" name="replaceDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="replaceBrand" id="replaceBrandLabel" data-translate="replaceBrand">Replacement Brand</label>
+                        <select id="replaceBrand" name="replaceBrand">
+                            <option value="" data-translate="selectBrand">Select Brand</option>
+                            <option value="Mitas">Mitas</option>
+                            <option value="Trelleborg">Trelleborg</option>
+                            <option value="Other" data-translate="other">Other</option>
+                        </select>
+                        <input type="text" id="replaceBrandOther" name="replaceBrandOther" style="display: none;" placeholder="Specify other brand">
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceType" class="required" data-translate="serviceType">Type of Service</label>
+                        <select id="serviceType" name="serviceType" required>
+                            <option value="" data-translate="selectServiceType">Select Service Type</option>
+                            <option value="generalTillage" data-translate="generalTillage">General Tillage</option>
+                            <option value="plantingSeeding" data-translate="plantingSeeding">Planting/Seeding</option>
+                            <option value="spraying" data-translate="spraying">Spraying</option>
+                            <option value="harvesting" data-translate="harvesting">Harvesting</option>
+                            <option value="transportHauling" data-translate="transportHauling">Transport/Hauling</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="axleLoad" data-translate="axleLoad">Axle Load (lbs)</label>
+                        <input type="number" id="axleLoad" name="axleLoad" min="0">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product Information Section -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-tire"></i>
+                    <span data-translate="productInfoTitle">Product Information</span>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="quantity" class="required" data-translate="quantity">Quantity</label>
+                        <select id="quantity" name="quantity" required>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="product-grid" id="productCards">
+                    <!-- Product 1 -->
+                    <div class="product-card" id="product1">
+                        <h4><i class="fas fa-tire"></i> <span data-translate="product">Product</span> 1</h4>
+                        <div class="form-group">
+                            <label for="productCode1" data-translate="productCode">Product Code</label>
+                            <input type="text" id="productCode1" name="productCode1">
+                        </div>
+                        <div class="form-group">
+                            <label for="brand1" class="required" data-translate="brand">Brand</label>
+                            <select id="brand1" name="brand1" required>
+                                <option value="" data-translate="selectBrand">Select Brand</option>
+                                <option value="Mitas">Mitas</option>
+                                <option value="Trelleborg">Trelleborg</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="size1" class="required" data-translate="size">Size</label>
+                            <input type="text" id="size1" name="size1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="model1" data-translate="modelField">Model</label>
+                            <input type="text" id="model1" name="model1">
+                        </div>
+                        <div class="form-group">
+                            <label for="position1" class="required" data-translate="position">Position on Machine</label>
+                            <select id="position1" name="position1" required>
+                                <option value="" selected disabled></option>
+                                <option value="Left Front" data-translate="leftFront">Left Front</option>
+                                <option value="Right Front" data-translate="rightFront">Right Front</option>
+                                <option value="Left Rear" data-translate="leftRear">Left Rear</option>
+                                <option value="Right Rear" data-translate="rightRear">Right Rear</option>
+                                <option value="Other" data-translate="otherPosition">Other</option>
+                            </select>
+                            <input type="text" id="positionOther1" name="positionOther1" style="display: none;" placeholder="Specify other position">
+                        </div>
+                        <div class="form-group">
+                            <label for="mfgDate1" class="required" data-translate="mfgDate">Manufacturing Date Code</label>
+                            <input type="text" id="mfgDate1" name="mfgDate1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productHours1" class="required" data-translate="productHours">Hours on Product</label>
+                            <input type="number" id="productHours1" name="productHours1" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inflation1" data-translate="inflation">Inflation Pressure (PSI)</label>
+                            <input type="number" id="inflation1" name="inflation1" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="treadDepth1" data-translate="treadDepth">Tread Depth (32nds)</label>
+                            <input type="number" id="treadDepth1" name="treadDepth1" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="defectType1" class="required" data-translate="defectType">Type of Defect</label>
+                            <input type="text" id="defectType1" name="defectType1" required>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 2 -->
+                    <div class="product-card hidden" id="product2">
+                        <h4><i class="fas fa-tire"></i> <span data-translate="product">Product</span> 2</h4>
+                        <div class="form-group">
+                            <label for="productCode2" data-translate="productCode">Product Code</label>
+                            <input type="text" id="productCode2" name="productCode2">
+                        </div>
+                        <div class="form-group">
+                            <label for="brand2" class="required" data-translate="brand">Brand</label>
+                            <select id="brand2" name="brand2">
+                                <option value="" data-translate="selectBrand">Select Brand</option>
+                                <option value="Mitas">Mitas</option>
+                                <option value="Trelleborg">Trelleborg</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="size2" class="required" data-translate="size">Size</label>
+                            <input type="text" id="size2" name="size2">
+                        </div>
+                        <div class="form-group">
+                            <label for="model2" data-translate="modelField">Model</label>
+                            <input type="text" id="model2" name="model2">
+                        </div>
+                        <div class="form-group">
+                            <label for="position2" class="required" data-translate="position">Position on Machine</label>
+                            <select id="position2" name="position2">
+                                <option value="" selected disabled></option>
+                                <option value="Left Front" data-translate="leftFront">Left Front</option>
+                                <option value="Right Front" data-translate="rightFront">Right Front</option>
+                                <option value="Left Rear" data-translate="leftRear">Left Rear</option>
+                                <option value="Right Rear" data-translate="rightRear">Right Rear</option>
+                                <option value="Other" data-translate="otherPosition">Other</option>
+                            </select>
+                            <input type="text" id="positionOther2" name="positionOther2" style="display: none;" placeholder="Specify other position">
+                        </div>
+                        <div class="form-group">
+                            <label for="mfgDate2" class="required" data-translate="mfgDate">Manufacturing Date Code</label>
+                            <input type="text" id="mfgDate2" name="mfgDate2">
+                        </div>
+                        <div class="form-group">
+                            <label for="productHours2" class="required" data-translate="productHours">Hours on Product</label>
+                            <input type="number" id="productHours2" name="productHours2" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="inflation2" data-translate="inflation">Inflation Pressure (PSI)</label>
+                            <input type="number" id="inflation2" name="inflation2" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="treadDepth2" data-translate="treadDepth">Tread Depth (32nds)</label>
+                            <input type="number" id="treadDepth2" name="treadDepth2" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="defectType2" class="required" data-translate="defectType">Type of Defect</label>
+                            <input type="text" id="defectType2" name="defectType2">
+                        </div>
+                    </div>
+                    
+                    <!-- Product 3 -->
+                    <div class="product-card hidden" id="product3">
+                        <h4><i class="fas fa-tire"></i> <span data-translate="product">Product</span> 3</h4>
+                        <div class="form-group">
+                            <label for="productCode3" data-translate="productCode">Product Code</label>
+                            <input type="text" id="productCode3" name="productCode3">
+                        </div>
+                        <div class="form-group">
+                            <label for="brand3" class="required" data-translate="brand">Brand</label>
+                            <select id="brand3" name="brand3">
+                                <option value="" data-translate="selectBrand">Select Brand</option>
+                                <option value="Mitas">Mitas</option>
+                                <option value="Trelleborg">Trelleborg</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="size3" class="required" data-translate="size">Size</label>
+                            <input type="text" id="size3" name="size3">
+                        </div>
+                        <div class="form-group">
+                            <label for="model3" data-translate="modelField">Model</label>
+                            <input type="text" id="model3" name="model3">
+                        </div>
+                        <div class="form-group">
+                            <label for="position3" class="required" data-translate="position">Position on Machine</label>
+                            <select id="position3" name="position3">
+                                <option value="" selected disabled></option>
+                                <option value="Left Front" data-translate="leftFront">Left Front</option>
+                                <option value="Right Front" data-translate="rightFront">Right Front</option>
+                                <option value="Left Rear" data-translate="leftRear">Left Rear</option>
+                                <option value="Right Rear" data-translate="rightRear">Right Rear</option>
+                                <option value="Other" data-translate="otherPosition">Other</option>
+                            </select>
+                            <input type="text" id="positionOther3" name="positionOther3" style="display: none;" placeholder="Specify other position">
+                        </div>
+                        <div class="form-group">
+                            <label for="mfgDate3" class="required" data-translate="mfgDate">Manufacturing Date Code</label>
+                            <input type="text" id="mfgDate3" name="mfgDate3">
+                        </div>
+                        <div class="form-group">
+                            <label for="productHours3" class="required" data-translate="productHours">Hours on Product</label>
+                            <input type="number" id="productHours3" name="productHours3" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="inflation3" data-translate="inflation">Inflation Pressure (PSI)</label>
+                            <input type="number" id="inflation3" name="inflation3" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="treadDepth3" data-translate="treadDepth">Tread Depth (32nds)</label>
+                            <input type="number" id="treadDepth3" name="treadDepth3" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="defectType3" class="required" data-translate="defectType">Type of Defect</label>
+                            <input type="text" id="defectType3" name="defectType3">
+                        </div>
+                    </div>
+                    
+                    <!-- Product 4 -->
+                    <div class="product-card hidden" id="product4">
+                        <h4><i class="fas fa-tire"></i> <span data-translate="product">Product</span> 4</h4>
+                        <div class="form-group">
+                            <label for="productCode4" data-translate="productCode">Product Code</label>
+                            <input type="text" id="productCode4" name="productCode4">
+                        </div>
+                        <div class="form-group">
+                            <label for="brand4" class="required" data-translate="brand">Brand</label>
+                            <select id="brand4" name="brand4">
+                                <option value="" data-translate="selectBrand">Select Brand</option>
+                                <option value="Mitas">Mitas</option>
+                                <option value="Trelleborg">Trelleborg</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="size4" class="required" data-translate="size">Size</label>
+                            <input type="text" id="size4" name="size4">
+                        </div>
+                        <div class="form-group">
+                            <label for="model4" data-translate="modelField">Model</label>
+                            <input type="text" id="model4" name="model4">
+                        </div>
+                        <div class="form-group">
+                            <label for="position4" class="required" data-translate="position">Position on Machine</label>
+                            <select id="position4" name="position4">
+                                <option value="" selected disabled></option>
+                                <option value="Left Front" data-translate="leftFront">Left Front</option>
+                                <option value="Right Front" data-translate="rightFront">Right Front</option>
+                                <option value="Left Rear" data-translate="leftRear">Left Rear</option>
+                                <option value="Right Rear" data-translate="rightRear">Right Rear</option>
+                                <option value="Other" data-translate="otherPosition">Other</option>
+                            </select>
+                            <input type="text" id="positionOther4" name="positionOther4" style="display: none;" placeholder="Specify other position">
+                        </div>
+                        <div class="form-group">
+                            <label for="mfgDate4" class="required" data-translate="mfgDate">Manufacturing Date Code</label>
+                            <input type="text" id="mfgDate4" name="mfgDate4">
+                        </div>
+                        <div class="form-group">
+                            <label for="productHours4" class="required" data-translate="productHours">Hours on Product</label>
+                            <input type="number" id="productHours4" name="productHours4" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="inflation4" data-translate="inflation">Inflation Pressure (PSI)</label>
+                            <input type="number" id="inflation4" name="inflation4" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="treadDepth4" data-translate="treadDepth">Tread Depth (32nds)</label>
+                            <input type="number" id="treadDepth4" name="treadDepth4" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="defectType4" class="required" data-translate="defectType">Type of Defect</label>
+                            <input type="text" id="defectType4" name="defectType4">
+                        </div>
+                    </div>
+                    
+                    <!-- Product 5 -->
+                    <div class="product-card hidden" id="product5">
+                        <h4><i class="fas fa-tire"></i> <span data-translate="product">Product</span> 5</h4>
+                        <div class="form-group">
+                            <label for="productCode5" data-translate="productCode">Product Code</label>
+                            <input type="text" id="productCode5" name="productCode5">
+                        </div>
+                        <div class="form-group">
+                            <label for="brand5" class="required" data-translate="brand">Brand</label>
+                            <select id="brand5" name="brand5">
+                                <option value="" data-translate="selectBrand">Select Brand</option>
+                                <option value="Mitas">Mitas</option>
+                                <option value="Trelleborg">Trelleborg</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="size5" class="required" data-translate="size">Size</label>
+                            <input type="text" id="size5" name="size5">
+                        </div>
+                        <div class="form-group">
+                            <label for="model5" data-translate="modelField">Model</label>
+                            <input type="text" id="model5" name="model5">
+                        </div>
+                        <div class="form-group">
+                            <label for="position5" class="required" data-translate="position">Position on Machine</label>
+                            <select id="position5" name="position5">
+                                <option value="" selected disabled></option>
+                                <option value="Left Front" data-translate="leftFront">Left Front</option>
+                                <option value="Right Front" data-translate="rightFront">Right Front</option>
+                                <option value="Left Rear" data-translate="leftRear">Left Rear</option>
+                                <option value="Right Rear" data-translate="rightRear">Right Rear</option>
+                                <option value="Other" data-translate="otherPosition">Other</option>
+                            </select>
+                            <input type="text" id="positionOther5" name="positionOther5" style="display: none;" placeholder="Specify other position">
+                        </div>
+                        <div class="form-group">
+                            <label for="mfgDate5" class="required" data-translate="mfgDate">Manufacturing Date Code</label>
+                            <input type="text" id="mfgDate5" name="mfgDate5">
+                        </div>
+                        <div class="form-group">
+                            <label for="productHours5" class="required" data-translate="productHours">Hours on Product</label>
+                            <input type="number" id="productHours5" name="productHours5" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="inflation5" data-translate="inflation">Inflation Pressure (PSI)</label>
+                            <input type="number" id="inflation5" name="inflation5" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="treadDepth5" data-translate="treadDepth">Tread Depth (32nds)</label>
+                            <input type="number" id="treadDepth5" name="treadDepth5" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="defectType5" class="required" data-translate="defectType">Type of Defect</label>
+                            <input type="text" id="defectType5" name="defectType5">
+                        </div>
+                    </div>
+                    
+                    <!-- Product 6 -->
+                    <div class="product-card hidden" id="product6">
+                        <h4><i class="fas fa-tire"></i> <span data-translate="product">Product</span> 6</h4>
+                        <div class="form-group">
+                            <label for="productCode6" data-translate="productCode">Product Code</label>
+                            <input type="text" id="productCode6" name="productCode6">
+                        </div>
+                        <div class="form-group">
+                            <label for="brand6" class="required" data-translate="brand">Brand</label>
+                            <select id="brand6" name="brand6">
+                                <option value="" data-translate="selectBrand">Select Brand</option>
+                                <option value="Mitas">Mitas</option>
+                                <option value="Trelleborg">Trelleborg</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="size6" class="required" data-translate="size">Size</label>
+                            <input type="text" id="size6" name="size6">
+                        </div>
+                        <div class="form-group">
+                            <label for="model6" data-translate="modelField">Model</label>
+                            <input type="text" id="model6" name="model6">
+                        </div>
+                        <div class="form-group">
+                            <label for="position6" class="required" data-translate="position">Position on Machine</label>
+                            <select id="position6" name="position6">
+                                <option value="" selected disabled></option>
+                                <option value="Left Front" data-translate="leftFront">Left Front</option>
+                                <option value="Right Front" data-translate="rightFront">Right Front</option>
+                                <option value="Left Rear" data-translate="leftRear">Left Rear</option>
+                                <option value="Right Rear" data-translate="rightRear">Right Rear</option>
+                                <option value="Other" data-translate="otherPosition">Other</option>
+                            </select>
+                            <input type="text" id="positionOther6" name="positionOther6" style="display: none;" placeholder="Specify other position">
+                        </div>
+                        <div class="form-group">
+                            <label for="mfgDate6" class="required" data-translate="mfgDate">Manufacturing Date Code</label>
+                            <input type="text" id="mfgDate6" name="mfgDate6">
+                        </div>
+                        <div class="form-group">
+                            <label for="productHours6" class="required" data-translate="productHours">Hours on Product</label>
+                            <input type="number" id="productHours6" name="productHours6" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="inflation6" data-translate="inflation">Inflation Pressure (PSI)</label>
+                            <input type="number" id="inflation6" name="inflation6" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="treadDepth6" data-translate="treadDepth">Tread Depth (32nds)</label>
+                            <input type="number" id="treadDepth6" name="treadDepth6" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="defectType6" class="required" data-translate="defectType">Type of Defect</label>
+                            <input type="text" id="defectType6" name="defectType6">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="btn-container">
+                <button type="button" class="btn btn-reset">
+                    <i class="fas fa-redo"></i> <span data-translate="resetForm">Reset Form</span>
+                </button>
+                <button type="button" class="btn btn-download" id="downloadBtn">
+                    <i class="fas fa-download"></i> <span data-translate="downloadPDF">Download PDF</span>
+                </button>
+                <button type="submit" class="btn btn-submit">
+                    <i class="fas fa-paper-plane"></i> <span data-translate="nextPhotos">Next: Upload Photos</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                headerTitle: "YOKOHAMA TWS",
+                headerSubtitle: "Adjustment Form",
+                formNumber: "Form: AG-ADJUST-2025",
+                languageLabel: "Select Language:",
+                formNotice: "Complete this form to file an adjustment claim for Yokohama TWS agricultural products. All sections must be filled accurately.",
+                claimInfoTitle: "Claim Information",
+                claimDate: "Date",
+                adjustNumber: "Distributor Adjustment Number",
+                accountNumber: "Distributor Account Number",
+                contactInfoTitle: "Contact Information",
+                distributorInfo: "Authorized Distributor Information",
+                distributorName: "Distributor Name",
+                phone: "Phone #",
+                email: "Email",
+                address: "Address",
+                city: "City",
+                state: "State",
+                zip: "ZIP",
+                dealerInfo: "Associate Dealer / Equipment Dealer Information",
+                dealerName: "Dealer Name",
+                consumerInfo: "End User (Consumer) Information",
+                consumerName: "Full Name",
+                equipmentInfoTitle: "Equipment Information",
+                vin: "VIN",
+                year: "Year",
+                make: "Make",
+                model: "Model",
+                equipmentHours: "Equipment Hours",
+                installServiceTitle: "Installation & Service Information",
+                originalEquipment: "Original Equipment?",
+                yes: "Yes",
+                no: "No",
+                installDate: "Installation Date",
+                replaced: "Replaced?",
+                replaceDate: "Replacement Date",
+                replaceBrand: "Replacement Brand",
+                selectBrand: "Select Brand",
+                other: "Other",
+                serviceType: "Type of Service",
+                selectServiceType: "Select Service Type",
+                generalTillage: "General Tillage",
+                plantingSeeding: "Planting/Seeding",
+                spraying: "Spraying",
+                harvesting: "Harvesting",
+                transportHauling: "Transport/Hauling",
+                axleLoad: "Axle Load (lbs)",
+                productInfoTitle: "Product Information",
+                quantity: "Quantity",
+                product: "Product",
+                productCode: "Product Code",
+                brand: "Brand",
+                size: "Size",
+                modelField: "Model",
+                position: "Position on Machine",
+                leftFront: "Left Front",
+                rightFront: "Right Front",
+                leftRear: "Left Rear",
+                rightRear: "Right Rear",
+                otherPosition: "Other",
+                mfgDate: "Manufacturing Date Code",
+                productHours: "Hours on Product",
+                inflation: "Inflation Pressure (PSI)",
+                treadDepth: "Tread Depth (32nds)",
+                defectType: "Type of Defect",
+                resetForm: "Reset Form",
+                downloadPDF: "Download PDF",
+                nextPhotos: "Next: Upload Photos"
+            },
+            es: {
+                headerTitle: "YOKOHAMA TWS",
+                headerSubtitle: "Formulario de Ajuste",
+                formNumber: "Formulario: AG-ADJUST-2025",
+                languageLabel: "Seleccionar Idioma:",
+                formNotice: "Complete este formulario para presentar una reclamación de ajuste de productos agrícolas de Yokohama TWS. Todas las secciones deben llenarse correctamente.",
+                claimInfoTitle: "Información de la Reclamación",
+                claimDate: "Fecha",
+                adjustNumber: "Número de Ajuste del Distribuidor",
+                accountNumber: "Número de Cuenta del Distribuidor",
+                contactInfoTitle: "Información de Contacto",
+                distributorInfo: "Información del Distribuidor Autorizado",
+                distributorName: "Nombre del Distribuidor",
+                phone: "Teléfono",
+                email: "Correo Electrónico",
+                address: "Dirección",
+                city: "Ciudad",
+                state: "Estado",
+                zip: "Código Postal",
+                dealerInfo: "Información del Distribuidor Asociado / Distribuidor de Equipos",
+                dealerName: "Nombre del Distribuidor",
+                consumerInfo: "Información del Cliente Final (Consumidor)",
+                consumerName: "Nombre Completo",
+                equipmentInfoTitle: "Información del Equipo",
+                vin: "VIN",
+                year: "Año",
+                make: "Marca",
+                model: "Modelo",
+                equipmentHours: "Horas del Equipo",
+                installServiceTitle: "Información de Instalación y Servicio",
+                originalEquipment: "¿Equipo Original?",
+                yes: "Sí",
+                no: "No",
+                installDate: "Fecha de Instalación",
+                replaced: "¿Reemplazado?",
+                replaceDate: "Fecha de Reemplazo",
+                replaceBrand: "Marca de Reemplazo",
+                selectBrand: "Seleccionar Marca",
+                other: "Otro",
+                serviceType: "Tipo de Servicio",
+                selectServiceType: "Seleccionar Tipo de Servicio",
+                generalTillage: "Labranza General",
+                plantingSeeding: "Siembra/Plantación",
+                spraying: "Pulverización",
+                harvesting: "Cosecha",
+                transportHauling: "Transporte/Acarreo",
+                axleLoad: "Carga por Eje (lbs)",
+                productInfoTitle: "Información del Producto",
+                quantity: "Cantidad",
+                product: "Producto",
+                productCode: "Código del Producto",
+                brand: "Marca",
+                size: "Tamaño",
+                modelField: "Modelo",
+                position: "Posición en la Máquina",
+                leftFront: "Delantero Izquierdo",
+                rightFront: "Delantero Derecho",
+                leftRear: "Trasero Izquierdo",
+                rightRear: "Trasero Derecho",
+                otherPosition: "Otro",
+                mfgDate: "Código de Fecha de Fabricación",
+                productHours: "Horas en el Producto",
+                inflation: "Presión de Inflado (PSI)",
+                treadDepth: "Profundidad de la Banda (32avos)",
+                defectType: "Tipo de Defecto",
+                resetForm: "Restablecer Formulario",
+                downloadPDF: "Descargar PDF",
+                nextPhotos: "Siguiente: Subir Fotos"
+            },
+            fr: {
+                headerTitle: "YOKOHAMA TWS",
+                headerSubtitle: "Formulaire d'Ajustement",
+                formNumber: "Formulaire: AG-ADJUST-2025",
+                languageLabel: "Sélectionner la Langue:",
+                formNotice: "Remplissez ce formulaire pour déposer une réclamation d'ajustement pour les produits agricoles Yokohama TWS. Toutes les sections doivent être remplies correctement.",
+                claimInfoTitle: "Informations sur la Réclamation",
+                claimDate: "Date",
+                adjustNumber: "Numéro d'Ajustement du Distributeur",
+                accountNumber: "Numéro de Compte du Distributeur",
+                contactInfoTitle: "Informations de Contact",
+                distributorInfo: "Informations du Distributeur Agréé",
+                distributorName: "Nom du Distributeur",
+                phone: "Téléphone",
+                email: "Courriel",
+                address: "Adresse",
+                city: "Ville",
+                state: "État",
+                zip: "Code Postal",
+                dealerInfo: "Informations du Revendeur Associé / Revendeur d'Équipement",
+                dealerName: "Nom du Revendeur",
+                consumerInfo: "Informations de l'Utilisateur Final (Consommateur)",
+                consumerName: "Nom Complet",
+                equipmentInfoTitle: "Informations sur l'Équipement",
+                vin: "VIN",
+                year: "Année",
+                make: "Marque",
+                model: "Modèle",
+                equipmentHours: "Heures de l'Équipement",
+                installServiceTitle: "Informations sur l'Installation et le Service",
+                originalEquipment: "Équipement d'Origine?",
+                yes: "Oui",
+                no: "Non",
+                installDate: "Date d'Installation",
+                replaced: "Remplacé?",
+                replaceDate: "Date de Remplacement",
+                replaceBrand: "Marque de Remplacement",
+                selectBrand: "Sélectionner la Marque",
+                other: "Autre",
+                serviceType: "Type de Service",
+                selectServiceType: "Sélectionner le Type de Service",
+                generalTillage: "Labour Général",
+                plantingSeeding: "Plantation/Ensemencement",
+                spraying: "Pulvérisation",
+                harvesting: "Récolte",
+                transportHauling: "Transport/Traction",
+                axleLoad: "Charge par Essieu (lbs)",
+                productInfoTitle: "Informations sur le Produit",
+                quantity: "Quantité",
+                product: "Produit",
+                productCode: "Code du Produit",
+                brand: "Marque",
+                size: "Taille",
+                modelField: "Modèle",
+                position: "Position sur la Machine",
+                leftFront: "Avant Gauche",
+                rightFront: "Avant Droit",
+                leftRear: "Arrière Gauche",
+                rightRear: "Arrière Droit",
+                otherPosition: "Autre",
+                mfgDate: "Code de Date de Fabrication",
+                productHours: "Heures sur le Produit",
+                inflation: "Pression de Gonflage (PSI)",
+                treadDepth: "Profondeur de la Bande (32èmes)",
+                defectType: "Type de Défaut",
+                resetForm: "Réinitialiser le Formulaire",
+                downloadPDF: "Télécharger PDF",
+                nextPhotos: "Suivant : Télécharger les Photos"
+            }
+        };
+
+        // Function to update product labels
+        function updateProductLabels(lang) {
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach((card, index) => {
+                const h4 = card.querySelector('h4');
+                if (h4) {
+                    const labelText = `${translations[lang].product} ${index + 1}`;
+                    h4.innerHTML = `<i class="fas fa-tire"></i> <span data-translate="product">${labelText}</span>`;
+                }
+            });
+        }
+
+        // Function to update form text based on selected language
+        function updateLanguage(lang) {
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                element.innerHTML = translations[lang][key] || key;
+            });
+
+            document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-translate-placeholder');
+                element.placeholder = translations[lang][key] || '';
+            });
+
+            document.querySelectorAll('select option[data-translate]').forEach(option => {
+                const key = option.getAttribute('data-translate');
+                option.textContent = translations[lang][key] || key;
+            });
+
+            document.documentElement.lang = lang;
+            updateProductLabels(lang);
+        }
+
+        // Initialize form with default language (English)
+        document.addEventListener('DOMContentLoaded', () => {
+            updateLanguage('en');
+
+            const languageSelect = document.getElementById('languageSelect');
+            if (languageSelect) {
+                languageSelect.addEventListener('change', function() {
+                    updateLanguage(this.value);
+                });
+            }
+
+            // Reset form handling
+            const resetBtn = document.querySelector('.btn-reset');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function() {
+                    const lang = document.getElementById('languageSelect').value;
+                    if (confirm(translations[lang].resetForm + '?')) {
+                        document.getElementById('claimForm').reset();
+                        const quantitySelect = document.getElementById('quantity');
+                        if (quantitySelect) {
+                            quantitySelect.value = '1';
+                            updateProductVisibility();
+                        }
+                        updateInstallDateRequirement();
+                        updateReplacementFieldsRequirement();
+                        updateLanguage(lang);
+                        toggleOtherInputs(); // Reset visibility of "Other" input fields
+                    }
+                });
+            }
+
+            // Download PDF handling
+            const downloadBtn = document.getElementById('downloadBtn');
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', function() {
+                    const lang = document.getElementById('languageSelect').value;
+                    alert(translations[lang].downloadPDF + ' started.');
+                });
+            }
+
+            // Quantity selector handling
+            const quantitySelect = document.getElementById('quantity');
+            const productCards = document.querySelectorAll('.product-card');
+            if (quantitySelect && productCards.length > 0) {
+                quantitySelect.addEventListener('change', updateProductVisibility);
+                updateProductVisibility(); // Initial call to set visibility based on default quantity
+            }
+
+            // Dynamic requirement for Installation Date based on Original Equipment
+            function updateInstallDateRequirement() {
+                const originalNo = document.getElementById('originalNo')?.checked || false;
+                const installDateInput = document.getElementById('installDate');
+                const installDateLabel = document.getElementById('installDateLabel');
+                if (installDateInput && installDateLabel) {
+                    installDateInput.required = originalNo;
+                    installDateLabel.classList.toggle('required', originalNo);
+                }
+            }
+
+            // Dynamic requirement for Replacement Date and Brand based on Replaced
+            function updateReplacementFieldsRequirement() {
+                const replacedYes = document.getElementById('replacedYes')?.checked || false;
+                const replaceDateInput = document.getElementById('replaceDate');
+                const replaceBrandInput = document.getElementById('replaceBrand');
+                const replaceDateLabel = document.getElementById('replaceDateLabel');
+                const replaceBrandLabel = document.getElementById('replaceBrandLabel');
+                const replaceBrandOtherInput = document.getElementById('replaceBrandOther');
+                if (replaceDateInput && replaceBrandInput && replaceDateLabel && replaceBrandLabel) {
+                    replaceDateInput.required = replacedYes;
+                    replaceBrandInput.required = replacedYes;
+                    replaceDateLabel.classList.toggle('required', replacedYes);
+                    replaceBrandLabel.classList.toggle('required', replacedYes);
+                    if (replaceBrandOtherInput) {
+                        replaceBrandOtherInput.required = replacedYes && replaceBrandInput.value === "Other";
+                        replaceBrandOtherInput.style.display = replaceBrandInput.value === "Other" ? 'block' : 'none';
+                    }
+                }
+            }
+
+            // Toggle visibility of "Other" input fields for Replacement Brand and Position
+            function toggleOtherInputs() {
+                // Replacement Brand "Other" input
+                const replaceBrandInput = document.getElementById('replaceBrand');
+                const replaceBrandOtherInput = document.getElementById('replaceBrandOther');
+                if (replaceBrandInput && replaceBrandOtherInput) {
+                    replaceBrandOtherInput.style.display = replaceBrandInput.value === "Other" ? 'block' : 'none';
+                    replaceBrandOtherInput.required = replaceBrandInput.value === "Other" && document.getElementById('replacedYes')?.checked;
+                }
+
+                // Position on Machine "Other" inputs for each product card
+                productCards.forEach((_, index) => {
+                    const positionInput = document.getElementById(`position${index + 1}`);
+                    const positionOtherInput = document.getElementById(`positionOther${index + 1}`);
+                    if (positionInput && positionOtherInput) {
+                        positionOtherInput.style.display = positionInput.value === "Other" ? 'block' : 'none';
+                        positionOtherInput.required = positionInput.value === "Other";
+                    }
+                });
+            }
+
+            // Event listeners for radio buttons
+            const originalYes = document.getElementById('originalYes');
+            const originalNo = document.getElementById('originalNo');
+            const replacedYes = document.getElementById('replacedYes');
+            const replacedNo = document.getElementById('replacedNo');
+            if (originalYes) originalYes.addEventListener('change', updateInstallDateRequirement);
+            if (originalNo) originalNo.addEventListener('change', updateInstallDateRequirement);
+            if (replacedYes) replacedYes.addEventListener('change', updateReplacementFieldsRequirement);
+            if (replacedNo) replacedNo.addEventListener('change', updateReplacementFieldsRequirement);
+
+            // Event listener for Replacement Brand dropdown to show/hide "Other" input
+            const replaceBrandInput = document.getElementById('replaceBrand');
+            if (replaceBrandInput) {
+                replaceBrandInput.addEventListener('change', updateReplacementFieldsRequirement);
+            }
+
+            // Event listeners for Position on Machine dropdowns to show/hide "Other" input
+            productCards.forEach((_, index) => {
+                const positionInput = document.getElementById(`position${index + 1}`);
+                if (positionInput) {
+                    positionInput.addEventListener('change', () => {
+                        const positionOtherInput = document.getElementById(`positionOther${index + 1}`);
+                        if (positionOtherInput) {
+                            positionOtherInput.style.display = positionInput.value === "Other" ? 'block' : 'none';
+                            positionOtherInput.required = positionInput.value === "Other";
+                        }
+                    });
+                }
+            });
+
+            function updateProductVisibility() {
+                const quantity = parseInt(quantitySelect.value);
+                productCards.forEach((card, index) => {
+                    const isVisible = index < quantity;
+                    card.classList.toggle('hidden', !isVisible);
+                    const inputs = card.querySelectorAll('input, select');
+                    inputs.forEach(input => {
+                        const fieldId = input.id.replace(/\d+$/, '');
+                        if (['brand', 'size', 'position', 'mfgDate', 'productHours', 'defectType'].includes(fieldId)) {
+                            input.required = isVisible;
+                            const label = card.querySelector(`label[for="${input.id}"]`);
+                            if (label) label.classList.toggle('required', isVisible);
+                        }
+                    });
+                    const positionInput = card.querySelector(`select[id^="position"]`);
+                    const positionOtherInput = card.querySelector(`input[id^="positionOther"]`);
+                    if (positionInput && positionOtherInput) {
+                        positionOtherInput.style.display = positionInput.value === "Other" ? 'block' : 'none';
+                        positionOtherInput.required = positionInput.value === "Other" && isVisible;
+                    }
+                });
+                updateProductLabels(document.getElementById('languageSelect').value);
+            }
+
+            toggleOtherInputs(); // Initial call to set visibility of "Other" inputs
+        });
+    </script>
+</body>
+</html>

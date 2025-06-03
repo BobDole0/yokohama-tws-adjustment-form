@@ -1,0 +1,1323 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOKOHAMA TWS Photo Upload</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Lexend', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f2f2f2 0%, #e6e6e6 100%);
+            padding: 15px;
+            color: #333;
+            line-height: 2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        header {
+            background: #ec2431;
+            color: white;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            z-index: 2;
+        }
+        
+        .title h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            letter-spacing: -0.2px;
+        }
+        
+        .title p {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: normal;
+        }
+        
+        .form-notice {
+            background: #f2f2f2;
+            padding: 15px 25px;
+            font-size: 16px;
+            border-bottom: 2px solid #cccccc;
+            display: flex;
+            align-items: center;
+            color: #333;
+        }
+        
+        .form-notice i {
+            margin-right: 10px;
+            font-size: 24px;
+            color: #ec2431;
+        }
+        
+        .form-section {
+            padding: 30px 25px;
+            border-bottom: 1px solid #333;
+            background: #fff;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #ec2431;
+            display: flex;
+            align-items: center;
+            padding-left: 15px;
+            border-left: 5px solid #9b6b55;
+            letter-spacing: -0.8px;
+        }
+        
+        .section-title i {
+            margin-right: 15px;
+            color: #9b6b55;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -15px;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 150px;
+            padding: 0 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: inline-block;
+            margin-bottom: 10px;
+            font-weight: normal;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: #f9f9f9;
+            font-family: 'Lexend', sans-serif;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            border-color: #9b6b55;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(155, 255, 85, 0.2);
+            background: #fff;
+        }
+        
+        .form-group textarea {
+            height: 100px;
+            resize: auto;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .product-card {
+            background: #f2f2f2;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        
+        .product-card.hidden {
+            display: none;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+        
+        .product-card h4 {
+            margin-bottom: 20px;
+            color: #ec2431;
+            font-size: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #9b6b55;
+            display: flex;
+            align-items: center;
+            letter-spacing: -0.5px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .upload-section {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #cccccc;
+        }
+        
+        .section-title-upload {
+            font-size: 1.3rem;
+            color: #333333;
+            font-weight: 600;
+        }
+        
+        .help-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #f2f2f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #666666;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .help-icon:hover {
+            background: #dc3228;
+            color: #ffffff;
+        }
+        
+        .section-content {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #666666;
+            font-weight: 300;
+        }
+        
+        .requirements {
+            background: #f2f2f2;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #dc3228;
+        }
+        
+        .requirements li {
+            margin-bottom: 8px;
+            list-style-type: none;
+            position: relative;
+            padding-left: 25px;
+            font-size: 0.95rem;
+        }
+        
+        .requirements li:before {
+            content: "•";
+            color: #dc3228;
+            font-size: 1.4rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+        
+        .upload-area {
+            border: 2px dashed #999999;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 15px;
+        }
+        
+        .upload-area:hover {
+            background: rgba(155, 107, 85, 0.05);
+            border-color: #9b6b55;
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: #999999;
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
+        }
+        
+        .upload-area:hover .upload-icon {
+            color: #9b6b55;
+        }
+        
+        .upload-text {
+            font-size: 1.1rem;
+            color: #666666;
+            margin-bottom: 15px;
+            font-weight: 300;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .preview-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid #cccccc;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 8px;
+        }
+        
+        .checkbox-group label {
+            margin-bottom: 0;
+            font-weight: normal;
+            margin-left: 4px;
+        }
+        
+        .checkbox-group input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            margin: 0;
+        }
+        
+        .radio-container {
+            display: flex;
+            flex-direction: column;
+            align-items: left;
+        }
+        
+        .agreement-box {
+            background: #f9f9f9;
+            border: 2px solid #c5e1a3;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            border-left: 3px solid #9b6b55;
+        }
+        
+        .agreement-box p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+        
+        .signature-area {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #333;
+            gap: 20px;
+        }
+        
+        .signature-group {
+            flex: 1;
+            padding: 0 10px;
+        }
+        
+        .signature-line {
+            height: 1px;
+            background: #555;
+            margin: 35px 0 15px;
+            position: relative;
+        }
+        
+        .signature-line:after {
+            content: "X";
+            position: absolute;
+            right: 10px;
+            top: -12px;
+            font-size: 18px;
+            color: #777;
+        }
+        
+        .footer-note {
+            background: #f2f2f2;
+            padding: 25px 40px;
+            border-top: 1px solid #cccccc;
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer-note i {
+            margin-right: 15px;
+            font-size: 24px;
+            color: #ec2431;
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            padding: 25px;
+            gap: 20px;
+            flex-wrap: wrap;
+            background: #f9f9f9;
+        }
+        
+        .btn {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            font-family: 'Lexend', sans-serif;
+            letter-spacing: -0.5px;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-submit {
+            background: #ec2431;
+            color: white;
+        }
+        
+        .btn-download {
+            background: #9b6b55;
+            color: white;
+        }
+        
+        .btn-reset {
+            background: #666666;
+            color: white;
+        }
+        
+        .distribute-options {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+            border-left: 5px solid #ec2431;
+        }
+        
+        .distribute-options h3 {
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 22px;
+        }
+        
+        .distribute-options ul {
+            list-style-type: none;
+            padding-left: 10px;
+        }
+        
+        .distribute-options li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .distribute-options li i {
+            color: #ec2431;
+            min-width: 25px;
+            font-size: 18px;
+            margin-top: 4px;
+        }
+        
+        .instructions {
+            background: #fff;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .instructions h3 {
+            color: #ec2431;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #9b6b55;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 22px;
+        }
+        
+        .instructions ol {
+            padding-left: 25px;
+        }
+        
+        .instructions ol li {
+            margin-bottom: 15px;
+            line-height: 1.7;
+            font-size: 16px;
+            padding-left: 10px;
+        }
+        
+        .instructions ol li:before {
+            content: "•";
+            color: #ec2431;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        
+        .language-selector {
+            padding: 15px 25px;
+            background: #f9f9f9;
+            border-bottom: 1px solid #cccccc;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .language-selector label {
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .language-selector select {
+            padding: 10px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            font-size: 15px;
+            background: #fff;
+            cursor: pointer;
+        }
+        
+        .language-selector select:focus {
+            border-color: #9b6b55;
+            outline: none;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .signature-area {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+            }
+            
+            .language-selector {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        
+        .tractor-icon {
+            position: absolute;
+            right: 30px;
+            top: 30px;
+            font-size: 50px;
+            color: rgba(255,255,255,0.3);
+            z-index: 1;
+        }
+        
+        .required:after {
+            content: " *";
+            color: #ec2431;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="title">
+                    <h1 data-translate="headerTitle">YOKOHAMA TWS</h1>
+                    <p data-translate="headerSubtitlePhoto">Photo Upload</p>
+                </div>
+            </div>
+            <div class="form-number">
+                <p data-translate="formNumber">Form: AG-ADJUST-2025</p>
+            </div>
+            <i class="fas fa-tractor tractor-icon"></i>
+        </header>
+        
+        <div class="language-selector">
+            <label for="languageSelect" data-translate="languageLabel">Select Language:</label>
+            <select id="languageSelect">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+            </select>
+        </div>
+        
+        <div class="form-notice">
+            <i class="fas fa-info-circle"></i>
+            <p data-translate="formNoticePhoto">Upload the required photos for your adjustment claim. Ensure all images meet the specified requirements.</p>
+        </div>
+        
+        <form id="photoForm" data-netlify="true">
+            <input type="hidden" name="form-name" value="photoForm">
+            <!-- Photo Upload Section -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-camera"></i>
+                    <span data-translate="photoUploadTitle">Photo Upload</span>
+                </div>
+                <div class="product-grid" id="productCards">
+                    <!-- Product cards will be dynamically populated based on quantity -->
+                </div>
+            </div>
+
+            <!-- Additional Information Section -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-comment-alt"></i>
+                    <span data-translate="additionalInfoSection">Additional Information</span>
+                </div>
+                <div class="form-group">
+                    <label for="comments" data-translate="comments">Comments</label>
+                    <textarea id="comments" name="comments" data-translate-placeholder="commentsPlaceholder"></textarea>
+                </div>
+            </div>
+            
+            <!-- Agreement Section -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-file-signature"></i>
+                    <span data-translate="agreementSection">Agreement</span>
+                </div>
+                
+                <div class="agreement-box">
+                    <p data-translate="agreementText"><strong>Agreement:</strong> I certify that the product(s) in this adjustment has not been involved in an accident or property damage, and that the information provided is true and accurate to the best of my knowledge. It is further understood that the product(s) in this adjustment should be available for further inspection if requested by Yokohama-TWS.</p>
+                    
+                    <div class="signature-area">
+                        <div class="signature-group">
+                            <div class="signature-line"></div>
+                            <label data-translate="signature">Signature</label>
+                        </div>
+                        <div class="signature-group">
+                            <label data-translate="date">Date</label>
+                            <input type="date" id="signatureDate" name="signatureDate" required style="margin-top: 10px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-note">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p data-translate="footerNote"><strong>Important:</strong> Please attach Proof of Purchase (purchase invoice) to adjustment form. <br>Yokohama-TWS will not accept an adjustment if the necessary details, including images, are not sent within 30 days of the initial adjustment date.</p>
+            </div>
+            
+            <div class="btn-container">
+                <button type="button" class="btn btn-reset">
+                    <i class="fas fa-redo"></i> <span data-translate="resetForm">Reset Form</span>
+                </button>
+                <button type="submit" class="btn btn-submit">
+                    <i class="fas fa-paper-plane"></i> <span data-translate="submitPhotos">Submit Photos</span>
+                </button>
+            </div>
+            
+            <div class="distribute-options">
+                <h3><i class="fas fa-paper-plane"></i> <span data-translate="submitOptionsTitle">How to Submit This Form</span></h3>
+                <ul>
+                    <li><i class="fas fa-check"></i> <span data-translate="submitOption1"><strong>Option 1:</strong> Fill out the form online, then click "Submit Claim"</span></li>
+                    <li><i class="fas fa-check"></i> <span data-translate="submitOption2"><strong>Option 2:</strong> Click "Download PDF" to save a copy, fill it out, and email to agwarranties@yokohama-tws.com</span></li>
+                    <li><i class="fas fa-check"></i> <span data-translate="submitOption3"><strong>Option 3:</strong> Print the completed form and mail to: Yokohama TWS, Att: Teresa Otto, 1200 Rove Ave, Charles City, IA 50616</span></li>
+                </ul>
+            </div>
+            
+            <div class="instructions">
+                <h3><i class="fas fa-info-circle"></i> <span data-translate="instructionsTitle">Instructions for Completing the Form</span></h3>
+                <ol>
+                    <li><span data-translate="instruction1">Complete all required fields marked with an asterisk (*)</span></li>
+                    <li><span data-translate="instruction2">Provide detailed information about each product being claimed</span></li>
+                    <li><span data-translate="instruction3">Include equipment details and usage information</span></li>
+                    <li><span data-translate="instruction4">Sign and date the agreement section</span></li>
+                    <li><span data-translate="instruction5">Attach proof of purchase and any supporting documents</span></li>
+                    <li><span data-translate="instruction6">Submit within 30 days of the initial adjustment date</span></li>
+                    <li><span data-translate="instruction7">Include the recommended minimum of 7 photos per product, following the photo example guide</span></li>
+                </ol>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                headerTitle: "YOKOHAMA TWS",
+                headerSubtitlePhoto: "Photo Upload",
+                formNumber: "Form: AG-ADJUST-2025",
+                languageLabel: "Select Language:",
+                formNoticePhoto: "Upload the required photos for your adjustment claim. Ensure all images meet the specified requirements.",
+                photoUploadTitle: "Photo Upload",
+                fullProfileView: "Full Profile View",
+                uploadFullProfile: "Upload a clear photo showing the full profile of the tire.",
+                requirements: "Requirements:",
+                entireTireVisible: "Entire tire must be visible",
+                sizeBrandReadable: "Tire size and brand must be clearly readable",
+                goodLighting: "Photo should be taken in good lighting",
+                treadView: "Tread View",
+                uploadTreadView: "Upload a clear photo showing the tire tread pattern.",
+                fullTreadPattern: "Full view of tread pattern across the tire",
+                depthMeasurementsVisible: "Depth measurements visible if possible",
+                noObstructions: "Ensure no obstructions in the photo",
+                defectOverview: "Defect Overview",
+                uploadDefectOverview: "Upload a well-lit photo showing the entire defect area.",
+                entireTireWithDefect: "Capture entire tire with defect visible",
+                highlightDefect: "Highlight defect area with chalk if needed",
+                goodLightingFocus: "Ensure good lighting and focus",
+                defectCloseup: "Defect Close-up",
+                uploadDefectCloseup: "Upload a detailed close-up photo of the defect.",
+                clearFocusedDefect: "Clear, focused image of the defect",
+                depthDimensions: "Show depth and dimensions of the defect",
+                referenceObject: "Include a reference object for scale if possible",
+                insideView: "Inside View",
+                uploadInsideView: "Upload a clear photo of the inside of the tire.",
+                entireInnerSurface: "Show the entire inner surface",
+                noDebris: "Ensure no debris obstructing the view",
+                goodInnerLighting: "Good lighting to reveal any imperfections",
+                manufacturingCode: "Manufacturing Code",
+                uploadManufacturingCode: "Upload a clear photo of the manufacturing code.",
+                codeReadable: "Code must be clearly readable",
+                codeFormat: "Should start with: XC, UD, 01H, WN, 4R or 54",
+                ovalNumbers: "Followed by an oval circle and 4 numbers",
+                removedCode: "Removed Code",
+                uploadRemovedCode: "Upload a photo showing the manufacturing code has been removed.",
+                areaRemoved: "Show the area where code was removed",
+                codeFullyRemoved: "Code must be completely removed",
+                noTraces: "No traces of the original code visible",
+                additionalPhotos: "Additional Photos",
+                uploadAdditionalPhotos: "Upload any additional photos that may support your claim.",
+                maxFivePhotos: "Maximum 5 additional photos",
+                relevantImages: "Only relevant images",
+                clearLighting: "Clear and well-lit",
+                clickUploadPhoto: "Click to upload photo",
+                clickUploadPhotos: "Click to upload photos",
+                fileTypes: "JPG, PNG or GIF (Max 5MB)",
+                multipleFiles: "You can select multiple files (Max 5MB each)",
+                additionalInfoSection: "Additional Information",
+                comments: "Comments",
+                commentsPlaceholder: "Provide any additional details about the claim",
+                agreementSection: "Agreement",
+                agreementText: "<strong>Agreement:</strong> I certify that the product(s) in this adjustment has not been involved in an accident or property damage, and that the information provided is true and accurate to the best of my knowledge. It is further understood that the product(s) in this adjustment should be available for further inspection if requested by Yokohama-TWS.",
+                signature: "Signature",
+                date: "Date",
+                footerNote: "<strong>Important:</strong> Please attach Proof of Purchase (purchase invoice) to adjustment form. <br>Yokohama-TWS will not accept an adjustment if the necessary details, including images, are not sent within 30 days of the initial adjustment date.",
+                submitOptionsTitle: "How to Submit This Form",
+                submitOption1: "<strong>Option 1:</strong> Fill out the form online, then click \"Submit Claim\"",
+                submitOption2: "<strong>Option 2:</strong> Click \"Download PDF\" to save a copy, fill it out, and email to agwarranties@yokohama-tws.com",
+                submitOption3: "<strong>Option 3:</strong> Print the completed form and mail to: Yokohama TWS, Att: Teresa Otto, 1200 Rove Ave, Charles City, IA 50616",
+                instructionsTitle: "Instructions for Completing the Form",
+                instruction1: "Complete all required fields marked with an asterisk (*)",
+                instruction2: "Provide detailed information about each product being claimed",
+                instruction3: "Include equipment details and usage information",
+                instruction4: "Sign and date the agreement section",
+                instruction5: "Attach proof of purchase and any supporting documents",
+                instruction6: "Submit within 30 days of the initial adjustment date",
+                instruction7: "Include the recommended minimum of 7 photos per product, following the photo example guide",
+                product: "Product",
+                resetForm: "Reset Form",
+                submitPhotos: "Submit Photos"
+            },
+            es: {
+                headerTitle: "YOKOHAMA TWS",
+                headerSubtitlePhoto: "Carga de Fotos",
+                formNumber: "Formulario: AG-ADJUST-2025",
+                languageLabel: "Seleccionar Idioma:",
+                formNoticePhoto: "Suba las fotos requeridas para su reclamación de ajuste. Asegúrese de que todas las imágenes cumplan con los requisitos especificados.",
+                photoUploadTitle: "Carga de Fotos",
+                fullProfileView: "Vista de Perfil Completo",
+                uploadFullProfile: "Suba una foto clara que muestre el perfil completo del neumático.",
+                requirements: "Requisitos:",
+                entireTireVisible: "El neumático completo debe ser visible",
+                sizeBrandReadable: "El tamaño y la marca del neumático deben ser claramente legibles",
+                goodLighting: "La foto debe tomarse con buena iluminación",
+                treadView: "Vista de la Banda de Rodadura",
+                uploadTreadView: "Suba una foto clara que muestre el patrón de la banda de rodadura del neumático.",
+                fullTreadPattern: "Vista completa del patrón de la banda de rodadura del neumático",
+                depthMeasurementsVisible: "Mediciones de profundidad visibles si es posible",
+                noObstructions: "Asegúrese de que no haya obstrucciones en la foto",
+                defectOverview: "Vista General del Defecto",
+                uploadDefectOverview: "Suba una foto bien iluminada que muestre toda el área del defecto.",
+                entireTireWithDefect: "Capturar todo el neumático con el defecto visible",
+                highlightDefect: "Resaltar el área del defecto con tiza si es necesario",
+                goodLightingFocus: "Asegúrese de buena iluminación y enfoque",
+                defectCloseup: "Primer Plano del Defecto",
+                uploadDefectCloseup: "Suba una foto detallada de cerca del defecto.",
+                clearFocusedDefect: "Imagen clara y enfocada del defecto",
+                depthDimensions: "Mostrar la profundidad y dimensiones del defecto",
+                referenceObject: "Incluir un objeto de referencia para la escala si es posible",
+                insideView: "Vista Interior",
+                uploadInsideView: "Suba una foto clara del interior del neumático.",
+                entireInnerSurface: "Mostrar toda la superficie interior",
+                noDebris: "Asegúrese de que no haya escombros obstruyendo la vista",
+                goodInnerLighting: "Buena iluminación para revelar imperfecciones",
+                manufacturingCode: "Código de Fabricación",
+                uploadManufacturingCode: "Suba una foto clara del código de fabricación.",
+                codeReadable: "El código debe ser claramente legible",
+                codeFormat: "Debe comenzar con: XC, UD, 01H, WN, 4R o 54",
+                ovalNumbers: "Seguido por un círculo ovalado y 4 números",
+                removedCode: "Código Eliminado",
+                uploadRemovedCode: "Suba una foto que muestre que el código de fabricación ha sido eliminado.",
+                areaRemoved: "Mostrar el área donde se eliminó el código",
+                codeFullyRemoved: "El código debe estar completamente eliminado",
+                noTraces: "No deben quedar rastros del código original",
+                additionalPhotos: "Fotos Adicionales",
+                uploadAdditionalPhotos: "Suba cualquier foto adicional que pueda respaldar su reclamación.",
+                maxFivePhotos: "Máximo 5 fotos adicionales",
+                relevantImages: "Solo imágenes relevantes",
+                clearLighting: "Claro y bien iluminado",
+                clickUploadPhoto: "Haga clic para subir foto",
+                clickUploadPhotos: "Haga clic para subir fotos",
+                fileTypes: "JPG, PNG o GIF (Máx 5MB)",
+                multipleFiles: "Puede seleccionar múltiples archivos (Máx 5MB cada uno)",
+                additionalInfoSection: "Información Adicional",
+                comments: "Comentarios",
+                commentsPlaceholder: "Proporcione cualquier detalle adicional sobre la reclamación",
+                agreementSection: "Acuerdo",
+                agreementText: "<strong>Acuerdo:</strong> Certifico que el(los) producto(s) en este ajuste no ha(n) estado involucrado(s) en un accidente o daño a la propiedad, y que la información proporcionada es verdadera y precisa según mi leal saber y entender. Se entiende que el(los) producto(s) en este ajuste debe(n) estar disponible(s) para inspección adicional si lo solicita Yokohama-TWS.",
+                signature: "Firma",
+                date: "Fecha",
+                footerNote: "<strong>Importante:</strong> Adjunte la prueba de compra (factura de compra) al formulario de ajuste. <br>Yokohama-TWS no aceptará un ajuste si faltan los detalles necesarios, incluidas las imágenes, dentro de los 30 días posteriores a la fecha inicial del ajuste.",
+                submitOptionsTitle: "Cómo Enviar Este Formulario",
+                submitOption1: "<strong>Opción 1:</strong> Complete el formulario en línea, luego haga clic en \"Enviar Reclamo\"",
+                submitOption2: "<strong>Opción 2:</strong> Haga clic en \"Descargar PDF\" para guardar una copia, complétela y envíela por correo electrónico a agwarranties@yokohama-tws.com",
+                submitOption3: "<strong>Opción 3:</strong> Imprima el formulario completo y envíelo por correo a: Yokohama TWS, Att: Teresa Otto, 1200 Rove Ave, Charles City, IA 50616",
+                instructionsTitle: "Instrucciones para Completar el Formulario",
+                instruction1: "Complete todos los campos requeridos marcados con un asterisco (*)",
+                instruction2: "Proporcione información detallada sobre cada producto reclamado",
+                instruction3: "Incluya detalles del equipo e información de uso",
+                instruction4: "Firme y feche la sección de acuerdo",
+                instruction5: "Adjunte la prueba de compra y cualquier documento de soporte",
+                instruction6: "Envíe dentro de los 30 días posteriores a la fecha inicial del ajuste",
+                instruction7: "Incluya el mínimo recomendado de 7 fotos por producto, siguiendo la guía de ejemplos de fotos",
+                product: "Producto",
+                resetForm: "Restablecer Formulario",
+                submitPhotos: "Enviar Fotos"
+            },
+            fr: {
+                headerTitle: "YOKOHAMA TWS",
+                headerSubtitlePhoto: "Téléchargement de Photos",
+                formNumber: "Formulaire: AG-ADJUST-2025",
+                languageLabel: "Sélectionner la Langue:",
+                formNoticePhoto: "Téléchargez les photos requises pour votre réclamation d'ajustement. Assurez-vous que toutes les images respectent les exigences spécifiées.",
+                photoUploadTitle: "Téléchargement de Photos",
+                fullProfileView: "Vue de Profil Complet",
+                uploadFullProfile: "Téléchargez une photo claire montrant le profil complet du pneu.",
+                requirements: "Exigences :",
+                entireTireVisible: "Le pneu entier doit être visible",
+                sizeBrandReadable: "La taille et la marque du pneu doivent être clairement lisibles",
+                goodLighting: "La photo doit être prise avec un bon éclairage",
+                treadView: "Vue de la Bande de Roulement",
+                uploadTreadView: "Téléchargez une photo claire montrant le motif de la bande de roulement du pneu.",
+                fullTreadPattern: "Vue complète du motif de la bande de roulement du pneu",
+                depthMeasurementsVisible: "Mesures de profondeur visibles si possible",
+                noObstructions: "Assurez-vous qu'il n'y a pas d'obstructions dans la photo",
+                defectOverview: "Aperçu du Défaut",
+                uploadDefectOverview: "Téléchargez une photo bien éclairée montrant toute la zone du défaut.",
+                entireTireWithDefect: "Capturer tout le pneu avec le défaut visible",
+                highlightDefect: "Mettre en évidence la zone du défaut avec de la craie si nécessaire",
+                goodLightingFocus: "Assurez un bon éclairage et un bon focus",
+                defectCloseup: "Gros Plan du Défaut",
+                uploadDefectCloseup: "Téléchargez une photo détaillée en gros plan du défaut.",
+                clearFocusedDefect: "Image claire et focalisée du défaut",
+                depthDimensions: "Montrer la profondeur et les dimensions du défaut",
+                referenceObject: "Inclure un objet de référence pour l'échelle si possible",
+                insideView: "Vue Intérieure",
+                uploadInsideView: "Téléchargez une photo claire de l'intérieur du pneu.",
+                entireInnerSurface: "Montrer toute la surface intérieure",
+                noDebris: "Assurez-vous qu'il n'y a pas de débris obstruant la vue",
+                goodInnerLighting: "Bon éclairage pour révéler les imperfections",
+                manufacturingCode: "Code de Fabrication",
+                uploadManufacturingCode: "Téléchargez une photo claire du code de fabrication.",
+                codeReadable: "Le code doit être clairement lisible",
+                codeFormat: "Doit commencer par : XC, UD, 01H, WN, 4R ou 54",
+                ovalNumbers: "Suivi d'un cercle ovale et 4 chiffres",
+                removedCode: "Code Supprimé",
+                uploadRemovedCode: "Téléchargez une photo montrant que le code de fabrication a été supprimé.",
+                areaRemoved: "Montrer la zone où le code a été supprimé",
+                codeFullyRemoved: "Le code doit être complètement supprimé",
+                noTraces: "Aucune trace du code original ne doit être visible",
+                additionalPhotos: "Photos Additionnelles",
+                uploadAdditionalPhotos: "Téléchargez toute photo supplémentaire qui peut soutenir votre réclamation.",
+                maxFivePhotos: "Maximum 5 photos supplémentaires",
+                relevantImages: "Seulement des images pertinentes",
+                clearLighting: "Clair et bien éclairé",
+                clickUploadPhoto: "Cliquez pour télécharger la photo",
+                clickUploadPhotos: "Cliquez pour télécharger les photos",
+                fileTypes: "JPG, PNG ou GIF (Max 5MB)",
+                multipleFiles: "Vous pouvez sélectionner plusieurs fichiers (Max 5MB chacun)",
+                additionalInfoSection: "Informations Supplémentaires",
+                comments: "Commentaires",
+                commentsPlaceholder: "Fournissez tout détail supplémentaire concernant la réclamation",
+                agreementSection: "Accord",
+                agreementText: "<strong>Accord :</strong> Je certifie que le(s) produit(s) de cet ajustement n’a(ont) pas été impliqué(s) dans un accident ou des dommages matériels, et que les informations fournies sont véridiques et exactes à ma connaissance. Il est également entendu que le(s) produit(s) de cet ajustement doit(vent) être disponible(s) pour une inspection supplémentaire si requis par Yokohama-TWS.",
+                signature: "Signature",
+                date: "Date",
+                footerNote: "<strong>Important :</strong> Veuillez joindre la preuve d’achat (facture d’achat) au formulaire d’ajustement. <br>Yokohama-TWS n’acceptera pas une demande si les détails nécessaires, y compris les images, ne sont pas envoyés dans les 30 jours suivant la date initiale de l’ajustement.",
+                submitOptionsTitle: "Comment Soumettre Ce Formulaire",
+                submitOption1: "<strong>Option 1 :</strong> Remplissez le formulaire en ligne, puis cliquez sur « Soumettre la Réclamation »",
+                submitOption2: "<strong>Option 2 :</strong> Cliquez sur « Télécharger le PDF » pour enregistrer une copie, remplissez-la et envoyez-la par courriel à agwarranties@yokohama-tws.com",
+                submitOption3: "<strong>Option 3 :</strong> Imprimez le formulaire complété et envoyez-le par courrier à: Yokohama TWS, Att: Teresa Otto, 1200 Rove Ave, Charles City, IA 50616",
+                instructionsTitle: "Instructions pour Remplir le Formulaire",
+                instruction1: "Remplissez tous les champs requis marqués d’un astérisque (*)",
+                instruction2: "Fournissez des informations détaillées sur chaque produit réclamé",
+                instruction3: "Incluez les détails de l’équipement et les informations d’utilisation",
+                instruction4: "Signez et datez la section de l’accord",
+                instruction5: "Joignez la preuve d’achat et tous les documents justificatifs",
+                instruction6: "Soumettez dans les 30 jours suivant la date initiale de l’ajustement",
+                instruction7: "Incluez un minimum recommandé de 7 photos par produit, selon le guide photo",
+                product: "Produit",
+                resetForm: "Réinitialiser le Formulaire",
+                submitPhotos: "Soumettre les Photos"
+            }
+        };
+
+        // Function to update form text based on selected language
+        function updateLanguage(lang) {
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                element.innerHTML = translations[lang][key] || key;
+            });
+
+            document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-translate-placeholder');
+                element.placeholder = translations[lang][key] || '';
+            });
+
+            document.querySelectorAll('select option[data-translate]').forEach(option => {
+                const key = option.getAttribute('data-translate');
+                option.textContent = translations[lang][key] || key;
+            });
+
+            document.documentElement.lang = lang;
+        }
+
+        // Initialize form and populate product cards based on quantity from URL
+        document.addEventListener('DOMContentLoaded', () => {
+            updateLanguage('en');
+
+            const languageSelect = document.getElementById('languageSelect');
+            if (languageSelect) {
+                languageSelect.addEventListener('change', function() {
+                    updateLanguage(this.value);
+                });
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const quantity = parseInt(urlParams.get('quantity') || '1');
+            const productCards = document.getElementById('productCards');
+
+            // Generate product cards dynamically based on quantity
+            for (let i = 1; i <= quantity; i++) {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.id = `product${i}`;
+                card.innerHTML = `
+                    <h4><i class="fas fa-tire"></i> <span data-translate="product">Product</span> ${i}</h4>
+                    <div class="form-grid">
+                        <div class="upload-section">
+                            <div class="section-header">
+                                <h3 class="section-title-upload" data-translate="fullProfileView">Full Profile View</h3>
+                                <div class="help-icon">?</div>
+                            </div>
+                            <div class="section-content">
+                                <p data-translate="uploadFullProfile">Upload a clear photo showing the full profile of the tire.</p>
+                                <div class="requirements">
+                                    <strong data-translate="requirements">Requirements:</strong>
+                                    <ul>
+                                        <li data-translate="entireTireVisible">Entire tire must be visible</li>
+                                        <li data-translate="sizeBrandReadable">Tire size and brand must be clearly readable</li>
+                                        <li data-translate="goodLighting">Photo should be taken in good lighting</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="upload-area">
+                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                                <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                                <input type="file" id="file${i}-1" name="file${i}-1" class="file-input" accept="image/*" required>
+                            </div>
+                            <div class="preview-container" id="preview${i}-1"></div>
+                        </div>
+                        <div class="upload-section">
+                            <div class="section-header">
+                                <h3 class="section-title-upload" data-translate="treadView">Tread View</h3>
+                                <div class="help-icon">?</div>
+                            </div>
+                            <div class="section-content">
+                                <p data-translate="uploadTreadView">Upload a clear photo showing the tire tread pattern.</p>
+                                <div class="requirements">
+                                    <strong data-translate="requirements">Requirements:</strong>
+                                    <ul>
+                                        <li data-translate="fullTreadPattern">Full view of tread pattern across the tire</li>
+                                        <li data-translate="depthMeasurementsVisible">Depth measurements visible if possible</li>
+                                        <li data-translate="noObstructions">Ensure no obstructions in the photo</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="upload-area">
+                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                                <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                                <input type="file" id="file${i}-2" name="file${i}-2" class="file-input" accept="image/*" required>
+                            </div>
+                            <div class="preview-container" id="preview${i}-2"></div>
+                        </div>
+                        <div class="upload-section">
+                            <div class="section-header">
+                                <h3 class="section-title-upload" data-translate="defectOverview">Defect Overview</h3>
+                                <div class="help-icon">?</div>
+                            </div>
+                            <div class="section-content">
+                                <p data-translate="uploadDefectOverview">Upload a well-lit photo showing the entire defect area.</p>
+                                <div class="requirements">
+                                    <strong data-translate="requirements">Requirements:</strong>
+                                    <ul>
+                                        <li data-translate="entireTireWithDefect">Capture entire tire with defect visible</li>
+                                        <li data-translate="highlightDefect">Highlight defect area with chalk if needed</li>
+                                        <li data-translate="goodLightingFocus">Ensure good lighting and focus</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="upload-area">
+                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                                <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                                <input type="file" id="file${i}-3" name="file${i}-3" class="file-input" accept="image/*" required>
+                            </div>
+                            <div class="preview-container" id="preview${i}-3"></div>
+                        </div>
+                        <div class="upload-section">
+                            <div class="section-header">
+                                <h3 class="section-title-upload" data-translate="defectCloseup">Defect Close-up</h3>
+                                <div class="help-icon">?</div>
+                            </div>
+                            <div class="section-content">
+                                <p data-translate="uploadDefectCloseup">Upload a detailed close-up photo of the defect.</p>
+                                <div class="requirements">
+                                    <strong data-translate="requirements">Requirements:</strong>
+                                    <ul>
+                                        <li data-translate="clearFocusedDefect">Clear, focused image of the defect</li>
+                                        <li data-translate="depthDimensions">Show depth and dimensions of the defect</li>
+                                        <li data-translate="referenceObject">Include a reference object for scale if possible</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="upload-area">
+                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                                <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                                <input type="file" id="file${i}-4" name="file${i}-4" class="file-input" accept="image/*" required>
+                            </div>
+                            <div class="preview-container" id="preview${i}-4"></div>
+                        </div>
+                        <div class="upload-section">
+                            <div class="section-header">
+                                <h3 class="section-title-upload" data-translate="insideView">Inside View</h3>
+                                <div class="help-icon">?</div>
+                            </div>
+                            <div class="section-content">
+                                <p data-translate="uploadInsideView">Upload a clear photo of the inside of the tire.</p>
+                                <div class="requirements">
+                                    <strong data-translate="requirements">Requirements:</strong>
+                                    <ul>
+                                        <li data-translate="entireInnerSurface">Show the entire inner surface</li>
+                                        <li data-translate="noDebris">Ensure no debris obstructing the view</li>
+                                        <li data-translate="goodInnerLighting">Good lighting to reveal any imperfections</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="upload-area">
+                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                                <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                                <input type="file" id="file${i}-5" name="file${i}-5" class="file-input" accept="image/*" required>
+                            </div>
+                            <div class="preview-container" id="preview${i}-5"></div>
+                        </div>
+                        <div class="upload-section">
+                            <div class="section-header">
+                                <h3 class="section-title-upload" data-translate="manufacturingCode">Manufacturing Code</h3>
+                                <div class="help-icon">?</div>
+                            </div>
+                            <div class="section-content">
+                                <p data-translate="uploadManufacturingCode">Upload a clear photo of the manufacturing code.</p>
+                                <div class="requirements">
+                                    <strong data-translate="requirements">Requirements:</strong>
+                                    <ul>
+                                        <li data-translate="codeReadable">Code must be clearly readable</li>
+                                        <li data-translate="codeFormat">Should start with: XC, UD, 01H, WN, 4R or 54</li>
+                                        <li data-translate="ovalNumbers">Followed by an oval circle and 4 numbers</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="upload-area">
+                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                                <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                                <input type="file" id="file${i}-6" name="file${i}-6" class="file-input" accept="image/*" required>
+                            </div>
+                            <div class="preview-container" id="preview${i}-6"></div>
+                        </div>
+                        <div class="upload-section">
+                            <div class="section-header">
+                                <h3 class="section-title-upload" data-translate="removedCode">Removed Code</h3>
+                                <div class="help-icon">?</div>
+                            </div>
+                            <div class="section-content">
+                                <p data-translate="uploadRemovedCode">Upload a photo showing the manufacturing code has been removed.</p>
+                                <div class="requirements">
+                                    <strong data-translate="requirements">Requirements:</strong>
+                                    <ul>
+                                        <li data-translate="areaRemoved">Show the area where code was removed</li>
+                                        <li data-translate="codeFullyRemoved">Code must be completely removed</li>
+                                        <li data-translate="noTraces">No traces of the original code visible</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="upload-area">
+                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                <p class="upload-text" data-translate="clickUploadPhoto">Click to upload photo</p>
+                                <p class="upload-text"><small data-translate="fileTypes">JPG, PNG or GIF (Max 5MB)</small></p>
+                                <input type="file" id="file${i}-7" name="file${i}-7" class="file-input" accept="image/*" required>
+                            </div>
+                            <div class="preview-container" id="preview${i}-7"></div>
+                        </div>
+                        <div class="upload-section">
+                            <div class="section-header">
+                                <h3 class="section-title-upload" data-translate="additionalPhotos">Additional Photos</h3>
+                                <div class="help-icon">?</div>
+                            </div>
+                            <div class="section-content">
+                                <p data-translate="uploadAdditionalPhotos">Upload any additional photos that may support your claim.</p>
+                                <div class="requirements">
+                                    <strong data-translate="requirements">Requirements:</strong>
+                                    <ul>
+                                        <li data-translate="maxFivePhotos">Maximum 5 additional photos</li>
+                                        <li data-translate="relevantImages">Only relevant images</li>
+                                        <li data-translate="clearLighting">Clear and well-lit</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="upload-area">
+                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                <p class="upload-text" data-translate="clickUploadPhotos">Click to upload photos</p>
+                                <p class="upload-text"><small data-translate="multipleFiles">You can select multiple files (Max 5MB each)</small></p>
+                                <input type="file" id="file${i}-8" name="file${i}-8" class="file-input" accept="image/*" multiple>
+                            </div>
+                            <div class="preview-container" id="preview${i}-8"></div>
+                        </div>
+                    </div>
+                `;
+                productCards.appendChild(card);
+            }
+
+            // Photo upload handling
+            const uploadStatus = {};
+            for (let i = 1; i <= quantity; i++) {
+                uploadStatus[i] = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false, 8: false };
+
+                function bindUploadAreaEvents(productNum) {
+                    const uploadAreas = document.querySelectorAll(`#product${productNum} .upload-area`);
+                    uploadAreas.forEach(area => {
+                        const fileInput = area.querySelector('.file-input');
+                        if (fileInput) {
+                            area.addEventListener('click', () => fileInput.click());
+                        }
+                    });
+                }
+
+                function handleFileSelect(event, sectionNumber, productNumber) {
+                    const files = event.target.files;
+                    const previewContainer = document.getElementById(`preview${productNumber}-${sectionNumber}`);
+                    if (previewContainer) {
+                        previewContainer.innerHTML = '';
+                        previewContainer.style.display = 'flex';
+
+                        const fileCount = sectionNumber === 8 ? Math.min(files.length, 5) : 1;
+                        let validFiles = 0;
+                        for (let j = 0; j < fileCount; j++) {
+                            const file = files[j];
+                            if (file.type.match('image.*')) {
+                                validFiles++;
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                    const img = document.createElement('img');
+                                    img.className = 'preview-image';
+                                    img.src = e.target.result;
+                                    img.title = file.name;
+                                    previewContainer.appendChild(img);
+                                };
+                                reader.readAsDataURL(file);
+                            }
+                        }
+                        uploadStatus[productNumber][sectionNumber] = validFiles > 0;
+                    }
+                }
+
+                const fileInputs = document.querySelectorAll(`#product${i} .file-input`);
+                fileInputs.forEach(input => {
+                    const [_, productNumber, sectionNumber] = input.id.split('-').map(Number);
+                    input.addEventListener('change', (event) => handleFileSelect(event, sectionNumber, productNumber));
+                });
+
+                bindUploadAreaEvents(i);
+            }
+
+            // Reset form handling
+            const resetBtn = document.querySelector('.btn-reset');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function() {
+                    const lang = document.getElementById('languageSelect').value;
+                    if (confirm(translations[lang].resetForm + '?')) {
+                        document.getElementById('photoForm').reset();
+                        document.querySelectorAll('.preview-container').forEach(container => {
+                            container.innerHTML = '';
+                            container.style.display = 'none';
+                        });
+                        for (let i = 1; i <= quantity; i++) {
+                            uploadStatus[i] = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false, 8: false };
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
